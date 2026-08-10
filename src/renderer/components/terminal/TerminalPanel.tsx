@@ -141,7 +141,7 @@ export function TerminalPanel({ global = false, ownerOverride }: TerminalPanelPr
   useEffect(() => {
     if (!global) return
     let cancelled = false
-    window.api.claude.userHome().then((home) => {
+    window.api.codev.userHome().then((home) => {
       if (!cancelled) setUserHome(home)
     })
     return (): void => {
@@ -250,7 +250,7 @@ export function TerminalPanel({ global = false, ownerOverride }: TerminalPanelPr
 
   const handleResume = (sessionId: string): void => {
     if (!hasOwner || !ownerId) return
-    createTab(ownerId, ownerCwd, `claude --resume ${sessionId}`)
+    createTab(ownerId, ownerCwd, `codev --resume ${sessionId}`)
     setHistoryOpen(false)
   }
 
@@ -556,7 +556,7 @@ export function TerminalPanel({ global = false, ownerOverride }: TerminalPanelPr
                   className="flex items-center gap-2 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-medium text-emerald-300 hover:border-emerald-400 hover:bg-emerald-500/20"
                 >
                   <Sparkles size={14} />
-                  Start Claude Code here
+                  Start Codev here
                 </button>
                 <div className="text-micro text-zinc-600">or click + above for an empty shell</div>
               </>

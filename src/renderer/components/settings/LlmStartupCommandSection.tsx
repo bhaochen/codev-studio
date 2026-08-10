@@ -63,7 +63,7 @@ export function LlmStartupCommandSection(): React.ReactElement {
             onKeyDown={(e) => {
               if (e.key === 'Enter') setLlmCustomCommand((e.target as HTMLInputElement).value)
             }}
-            placeholder="claude --resume"
+            placeholder="codev --resume"
             className="w-64 bg-transparent font-mono text-sm text-zinc-200 outline-none placeholder:text-zinc-600"
           />
         </div>
@@ -73,7 +73,7 @@ export function LlmStartupCommandSection(): React.ReactElement {
 
       {!capabilities.sessions && (
         <p className="mt-2.5 text-xs text-zinc-500">
-          Session history, context usage, MCP, skills and permissions read Claude Code&apos;s files
+          Session history, context usage, MCP, skills and permissions read Codev&apos;s files
           and stay hidden for this assistant.
         </p>
       )}

@@ -11,7 +11,7 @@ export const SCENES = {
   PRODUCT_REVEAL: { duration: 150 },
   FEATURE_TERMINAL: { duration: 120 },
   FEATURE_BROWSER: { duration: 120 },
-  FEATURE_SEND_TO_CLAUDE: { duration: 90 },
+  FEATURE_SEND_TO_CODEV: { duration: 90 },
   FEATURE_WORKSPACE: { duration: 90 },
   THEME_SHOWCASE: { duration: 150 },
   OUTRO: { duration: 90 },
@@ -30,7 +30,7 @@ export const FONTS = {
 export const CONTENT = {
   APP_NAME: "vbcdr",
   TAGLINE: "An AIDE for developers who vibe",
-  DESCRIPTION: "Desktop vibe coding environment for Claude Code developers",
+  DESCRIPTION: "Desktop vibe coding environment for Codev developers",
   PHILOSOPHY_LINE_1: "Terminals and browser previews take the main stage",
   PHILOSOPHY_LINE_2: "The editor is intentionally secondary",
   PROBLEM: "Traditional IDEs weren't built for AI agents",
@@ -39,9 +39,9 @@ export const CONTENT = {
     {
       title: "Terminal-First Design",
       bullets: [
-        "WebGL-rendered Claude terminals",
+        "WebGL-rendered Codev terminals",
         "Multi-tab with search & Shift+Enter newlines",
-        "Drag files & images directly into Claude",
+        "Drag files & images directly into Codev",
       ],
     },
     {
@@ -53,9 +53,9 @@ export const CONTENT = {
       ],
     },
     {
-      title: "Send to Claude",
+      title: "Send to Codev",
       bullets: [
-        "One-click send console errors to Claude",
+        "One-click send console errors to Codev",
         "Forward network failures instantly",
         "Debug without copy-pasting",
       ],

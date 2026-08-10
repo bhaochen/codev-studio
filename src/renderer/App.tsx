@@ -184,8 +184,8 @@ export function App(): React.ReactElement {
         case 'center-tab-editor':
           if (activeId) editorStore.setCenterTab(activeId, 'editor')
           break
-        case 'center-tab-claude':
-          if (activeId) editorStore.setCenterTab(activeId, 'claude')
+        case 'center-tab-codev':
+          if (activeId) editorStore.setCenterTab(activeId, 'codev')
           break
         case 'center-tab-skills':
           if (activeId) editorStore.setCenterTab(activeId, 'skills')
@@ -221,7 +221,7 @@ export function App(): React.ReactElement {
           if (fp) editorStore.closeFile(activeId, fp)
           break
         }
-        case 'new-claude-terminal':
+        case 'new-codev-terminal':
           if (activeId && projectPath) {
             const cmd = useLayoutStore.getState().getLlmStartupCommand()
             terminalStore.createTab(activeId, projectPath, cmd)
@@ -230,7 +230,7 @@ export function App(): React.ReactElement {
         case 'new-shell-terminal':
           if (activeId && projectPath) terminalStore.createTab(activeId, projectPath)
           break
-        case 'restart-claude': {
+        case 'restart-codev': {
           if (!activeId || !projectPath || !activeLlmTab?.initialCommand) break
           window.api.terminal.kill(activeLlmTab.id)
           terminalStore.replaceTab(activeLlmTab.id, activeId, projectPath, activeLlmTab.initialCommand)

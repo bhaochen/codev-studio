@@ -65,7 +65,7 @@ describe('findFileMatches', () => {
     expect(findFileMatches('something/random/no-ext here')).toHaveLength(0)
   })
 
-  it('detects paths inside parentheses (Claude tool output)', () => {
+  it('detects paths inside parentheses (Codev tool output)', () => {
     const matches = findFileMatches('● Read(src/foo.ts)')
     expect(matches).toHaveLength(1)
     expect(matches[0].rawPath).toBe('src/foo.ts')

@@ -1,7 +1,7 @@
 export type PermissionMode = 'default' | 'acceptEdits' | 'plan' | 'bypassPermissions' | 'auto' | 'dontAsk'
 export type RuleBucket = 'allow' | 'ask' | 'deny'
 
-export interface ClaudePermissionsBlock {
+export interface CodevPermissionsBlock {
   allow?: string[]
   ask?: string[]
   deny?: string[]
@@ -17,8 +17,8 @@ export interface StashedRules {
   deny?: string[]
 }
 
-export interface ClaudeSettings {
-  permissions?: ClaudePermissionsBlock
+export interface CodevSettings {
+  permissions?: CodevPermissionsBlock
   _vbcdrStashedRules?: StashedRules
   [key: string]: unknown
 }
@@ -36,12 +36,12 @@ export function settingsLocalPath(projectPath: string): string {
   return `${projectPath.replace(/\/+$/, '')}/.claude/settings.local.json`
 }
 
-export function parseSettings(raw: string): ClaudeSettings {
+export function parseSettings(raw: string): CodevSettings {
   if (!raw.trim()) return {}
-  return JSON.parse(raw) as ClaudeSettings
+  return JSON.parse(raw) as CodevSettings
 }
 
-export function toView(settings: ClaudeSettings): PermissionsView {
+export function toView(settings: CodevSettings): PermissionsView {
   const p = settings.permissions ?? {}
   return {
     mode: p.defaultMode ?? 'default',
@@ -72,11 +72,11 @@ export function validateRule(bucket: RuleBucket, rule: string): string | null {
   return null
 }
 
-export function addRule(settings: ClaudeSettings, bucket: RuleBucket, rule: string): ClaudeSettings {
+export function addRule(settings: CodevSettings, bucket: RuleBucket, rule: string): CodevSettings {
   const trimmed = rule.trim()
   if (!trimmed) return settings
   if (validateRule(bucket, trimmed)) return settings
-  const permissions: ClaudePermissionsBlock = { ...(settings.permissions ?? {}) }
+  const permissions: CodevPermissionsBlock = { ...(settings.permissions ?? {}) }
   const list = [...(permissions[bucket] ?? [])]
   if (list.includes(trimmed)) return settings
   list.push(trimmed)
@@ -84,8 +84,8 @@ export function addRule(settings: ClaudeSettings, bucket: RuleBucket, rule: stri
   return { ...settings, permissions }
 }
 
-export function removeRule(settings: ClaudeSettings, bucket: RuleBucket, rule: string): ClaudeSettings {
-  const permissions: ClaudePermissionsBlock = { ...(settings.permissions ?? {}) }
+export function removeRule(settings: CodevSettings, bucket: RuleBucket, rule: string): CodevSettings {
+  const permissions: CodevPermissionsBlock = { ...(settings.permissions ?? {}) }
   const list = (permissions[bucket] ?? []).filter((r) => r !== rule)
   if (list.length === 0) delete permissions[bucket]
   else permissions[bucket] = list
@@ -99,10 +99,10 @@ export interface PresetLike {
   deny: string[]
 }
 
-export function applyPreset(settings: ClaudeSettings, preset: PresetLike): ClaudeSettings {
-  const next: ClaudeSettings = { ...settings }
+export function applyPreset(settings: CodevSettings, preset: PresetLike): CodevSettings {
+  const next: CodevSettings = { ...settings }
   delete next._vbcdrStashedRules
-  const permissions: ClaudePermissionsBlock = { ...(next.permissions ?? {}) }
+  const permissions: CodevPermissionsBlock = { ...(next.permissions ?? {}) }
   if (preset.mode === 'default') delete permissions.defaultMode
   else permissions.defaultMode = preset.mode
 
@@ -135,7 +135,7 @@ export function matchesPreset(view: PermissionsView, preset: PresetLike): boolea
   )
 }
 
-function prunePermissions(settings: ClaudeSettings): ClaudeSettings {
+function prunePermissions(settings: CodevSettings): CodevSettings {
   const p = settings.permissions
   if (!p) return settings
   const empty =
@@ -154,21 +154,21 @@ function prunePermissions(settings: ClaudeSettings): ClaudeSettings {
   return settings
 }
 
-export function serialize(settings: ClaudeSettings): string {
+export function serialize(settings: CodevSettings): string {
   return JSON.stringify(settings, null, 2) + '\n'
 }
 
-export async function readSettings(projectPath: string): Promise<ClaudeSettings> {
+export async function readSettings(projectPath: string): Promise<CodevSettings> {
   const file = settingsLocalPath(projectPath)
   try {
-    const raw: string = await window.api.claude.readFile(file, projectPath)
+    const raw: string = await window.api.codev.readFile(file, projectPath)
     return parseSettings(raw)
   } catch {
     return {}
   }
 }
 
-export async function writeSettings(projectPath: string, settings: ClaudeSettings): Promise<void> {
+export async function writeSettings(projectPath: string, settings: CodevSettings): Promise<void> {
   const file = settingsLocalPath(projectPath)
-  await window.api.claude.writeFile(file, serialize(settings), projectPath)
+  await window.api.codev.writeFile(file, serialize(settings), projectPath)
 }

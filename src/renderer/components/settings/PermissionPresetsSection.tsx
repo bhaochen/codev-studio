@@ -7,7 +7,7 @@ import {
   type PermissionPreset
 } from '@/stores/permission-presets-store'
 import { PROFILE_LIBRARY } from '@/config/permission-profile-library'
-import { validateRule, type RuleBucket } from '@/lib/claude-permissions'
+import { validateRule, type RuleBucket } from '@/lib/codev-permissions'
 
 const BUCKETS: { key: RuleBucket; label: string; placeholder: string }[] = [
   { key: 'allow', label: 'Allow', placeholder: 'Bash(npm:*)' },

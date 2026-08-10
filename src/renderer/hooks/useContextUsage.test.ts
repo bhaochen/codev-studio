@@ -29,7 +29,7 @@ describe('useContextUsage', () => {
   it('polls transcript usage scoped to the tab and stores the token count', async () => {
     vi.mocked(window.api.tokenUsage.context).mockResolvedValue({
       contextTokens: 1234,
-      model: 'claude-sonnet-4-6',
+      model: 'codev-sonnet-4-6',
       contextCap: 200_000
     })
     renderHook(() => useContextUsage('t1', 'p1', '/cwd'))

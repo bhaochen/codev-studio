@@ -11,10 +11,10 @@ import {
   removeRule,
   validateRule,
   type RuleBucket,
-  type ClaudeSettings,
+  type CodevSettings,
   type PermissionsView,
   DEFAULT_VIEW
-} from '@/lib/claude-permissions'
+} from '@/lib/codev-permissions'
 import { usePermissionPresetsStore, type PermissionPreset } from '@/stores/permission-presets-store'
 
 interface Props {
@@ -29,7 +29,7 @@ const BUCKETS: { key: RuleBucket; label: string; placeholder: string }[] = [
 
 export function PermissionsButton({ projectPath }: Props): JSX.Element {
   const [open, setOpen] = useState(false)
-  const [settings, setSettings] = useState<ClaudeSettings>({})
+  const [settings, setSettings] = useState<CodevSettings>({})
   const [view, setView] = useState<PermissionsView>(DEFAULT_VIEW)
   const [drafts, setDrafts] = useState<Record<RuleBucket, string>>({ allow: '', ask: '', deny: '' })
   const [errors, setErrors] = useState<Record<RuleBucket, string | null>>({ allow: null, ask: null, deny: null })
@@ -64,7 +64,7 @@ export function PermissionsButton({ projectPath }: Props): JSX.Element {
   }, [open, refresh])
 
   const persist = useCallback(
-    async (next: ClaudeSettings): Promise<void> => {
+    async (next: CodevSettings): Promise<void> => {
       if (!projectPath) return
       setSettings(next)
       setView(toView(next))
@@ -114,7 +114,7 @@ export function PermissionsButton({ projectPath }: Props): JSX.Element {
         title={
           activePreset
             ? `Preset: ${activePreset.name} (.claude/settings.local.json)`
-            : 'Claude permissions (.claude/settings.local.json)'
+            : 'Codev permissions (.claude/settings.local.json)'
         }
       >
         <Shield

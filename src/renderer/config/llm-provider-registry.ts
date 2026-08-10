@@ -1,4 +1,4 @@
-export type LlmProviderId = 'claude' | 'codex' | 'custom'
+export type LlmProviderId = 'codev' | 'codex' | 'custom'
 
 export interface LlmProviderCapabilities {
   sessions: boolean
@@ -32,10 +32,10 @@ const NO_CAPABILITIES: LlmProviderCapabilities = {
 }
 
 export const LLM_PROVIDERS: Record<LlmProviderId, LlmProviderDefinition> = {
-  claude: {
-    id: 'claude',
-    label: 'Claude Code',
-    command: 'claude',
+  codev: {
+    id: 'codev',
+    label: 'Codev',
+    command: 'codev',
     clearContextCommand: '/clear',
     selectable: true,
     capabilities: {
@@ -67,14 +67,14 @@ export const LLM_PROVIDERS: Record<LlmProviderId, LlmProviderDefinition> = {
   }
 }
 
-export const DEFAULT_LLM_PROVIDER_ID: LlmProviderId = 'claude'
+export const DEFAULT_LLM_PROVIDER_ID: LlmProviderId = 'codev'
 
 export const SELECTABLE_LLM_PROVIDERS: LlmProviderDefinition[] = Object.values(LLM_PROVIDERS).filter(
   (p) => p.selectable
 )
 
 export function isLlmProviderId(value: unknown): value is LlmProviderId {
-  return value === 'claude' || value === 'codex' || value === 'custom'
+  return value === 'codev' || value === 'codex' || value === 'custom'
 }
 
 export function providerDefinition(id: LlmProviderId): LlmProviderDefinition {
@@ -89,7 +89,7 @@ export function resolveStartupCommand(id: LlmProviderId, customCommand: string):
 export function providerIdForCommand(command: string): LlmProviderId {
   const trimmed = command.trim()
   if (!trimmed) return DEFAULT_LLM_PROVIDER_ID
-  if (trimmed === LLM_PROVIDERS.claude.command) return 'claude'
+  if (trimmed === LLM_PROVIDERS.codev.command) return 'codev'
   if (trimmed === LLM_PROVIDERS.codex.command) return 'codex'
   return 'custom'
 }

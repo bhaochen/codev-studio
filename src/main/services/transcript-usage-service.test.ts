@@ -13,13 +13,13 @@ vi.mock('os', async (importOriginal) => {
 
 describe('contextCapForModel', () => {
   it('maps opus/sonnet/haiku to 200k', () => {
-    expect(contextCapForModel('claude-opus-4-8')).toBe(200_000)
-    expect(contextCapForModel('claude-sonnet-4-6')).toBe(200_000)
-    expect(contextCapForModel('claude-haiku-4-5-20251001')).toBe(200_000)
+    expect(contextCapForModel('codev-opus-4-8')).toBe(200_000)
+    expect(contextCapForModel('codev-sonnet-4-6')).toBe(200_000)
+    expect(contextCapForModel('codev-haiku-4-5-20251001')).toBe(200_000)
   })
 
   it('maps the [1m] variant to 1M', () => {
-    expect(contextCapForModel('claude-opus-4-8[1m]')).toBe(1_000_000)
+    expect(contextCapForModel('codev-opus-4-8[1m]')).toBe(1_000_000)
   })
 
   it('defaults to 200k for unknown / null', () => {
@@ -40,7 +40,7 @@ function assistantLine(opts: {
     isSidechain: opts.isSidechain ?? false,
     message: {
       role: 'assistant',
-      model: opts.model ?? 'claude-sonnet-4-6',
+      model: opts.model ?? 'codev-sonnet-4-6',
       usage: {
         input_tokens: opts.input ?? 0,
         cache_creation_input_tokens: opts.cacheCreate ?? 0,
@@ -56,16 +56,16 @@ describe('findUsageInTail', () => {
       assistantLine({ input: 10, cacheCreate: 100, cacheRead: 1000 }),
       assistantLine({ input: 20, cacheCreate: 200, cacheRead: 2000 })
     ].join('\n')
-    expect(findUsageInTail(tail)).toEqual({ contextTokens: 2220, model: 'claude-sonnet-4-6' })
+    expect(findUsageInTail(tail)).toEqual({ contextTokens: 2220, model: 'codev-sonnet-4-6' })
   })
 
   it('skips sidechain entries so subagents do not hijack the count', () => {
     const tail = [
-      assistantLine({ input: 5, cacheRead: 50_000, model: 'claude-opus-4-8' }),
+      assistantLine({ input: 5, cacheRead: 50_000, model: 'codev-opus-4-8' }),
       assistantLine({ input: 3, cacheRead: 900, isSidechain: true }),
       assistantLine({ input: 3, cacheRead: 1200, isSidechain: true })
     ].join('\n')
-    expect(findUsageInTail(tail)).toEqual({ contextTokens: 50_005, model: 'claude-opus-4-8' })
+    expect(findUsageInTail(tail)).toEqual({ contextTokens: 50_005, model: 'codev-opus-4-8' })
   })
 
   it('returns null when only sidechain entries have usage', () => {
@@ -79,7 +79,7 @@ describe('findUsageInTail', () => {
       '{"type":"assistant","message":{"role":"assistant"',
       assistantLine({})
     ].join('\n')
-    expect(findUsageInTail(tail)).toEqual({ contextTokens: 42, model: 'claude-sonnet-4-6' })
+    expect(findUsageInTail(tail)).toEqual({ contextTokens: 42, model: 'codev-sonnet-4-6' })
   })
 
   it('ignores non-assistant lines mentioning assistant in content', () => {
@@ -124,11 +124,11 @@ describe('readTranscriptUsage', () => {
   it('reads usage from the most recently modified transcript', () => {
     const older = writeTranscript('older.jsonl', assistantLine({ input: 100 }))
     bumpMtime(older, -60_000)
-    writeTranscript('newer.jsonl', assistantLine({ input: 55, model: 'claude-opus-4-8' }))
+    writeTranscript('newer.jsonl', assistantLine({ input: 55, model: 'codev-opus-4-8' }))
 
     expect(readTranscriptUsage(cwd)).toEqual({
       contextTokens: 55,
-      model: 'claude-opus-4-8',
+      model: 'codev-opus-4-8',
       contextCap: 200_000
     })
   })
@@ -167,7 +167,7 @@ describe('readTranscriptUsage', () => {
     fs.writeFileSync(file, assistantLine({ cacheRead: 50_000 }) + '\n')
     expect(readTranscriptUsage(cwd)).toEqual({
       contextTokens: 50_000,
-      model: 'claude-sonnet-4-6',
+      model: 'codev-sonnet-4-6',
       contextCap: 1_000_000
     })
   })

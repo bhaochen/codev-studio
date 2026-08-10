@@ -27,7 +27,7 @@ export function ConflictBanner(): React.ReactElement | null {
     }
   }
 
-  const handleAskClaude = (): void => {
+  const handleAskCodev = (): void => {
     if (!activeTerminalTabId) return
     const files = conflicts.map((c) => c.path).join(', ')
     sendToTerminalViaKeyboardEvent(
@@ -46,11 +46,11 @@ export function ConflictBanner(): React.ReactElement | null {
         View
       </button>
       <button
-        onClick={handleAskClaude}
+        onClick={handleAskCodev}
         disabled={!activeTerminalTabId}
         className="rounded bg-white/20 px-2 py-0.5 text-xs font-medium hover:bg-white/30 disabled:opacity-50"
       >
-        Ask Claude
+        Ask Codev
       </button>
       <button
         onClick={() => dismissConflicts(activeProjectId)}

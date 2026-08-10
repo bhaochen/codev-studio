@@ -87,9 +87,9 @@ const CATALOG: CatalogEntry[] = [
 ]
 
 const SCOPE_META: Record<McpScope, { label: string; hint: string; Icon: typeof Globe }> = {
-  user: { label: 'User', hint: '~/.claude.json — available in every project', Icon: Globe },
+  user: { label: 'User', hint: '~/.codevJ — available in every project', Icon: Globe },
   project: { label: 'Project', hint: '.mcp.json — committed to the repo, shared with the team', Icon: FolderOpen },
-  local: { label: 'Local', hint: 'This project only, stored in ~/.claude.json', Icon: Laptop }
+  local: { label: 'Local', hint: 'This project only, stored in ~/.codevJ', Icon: Laptop }
 }
 
 function transportOf(config: McpServerConfig): McpTransport {
@@ -395,14 +395,14 @@ export function McpPage(): React.ReactElement {
           {servers && (
             <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-micro text-zinc-400">{servers.length}</span>
           )}
-          <span className="ml-2 text-micro text-zinc-600">Changes apply to new Claude sessions</span>
+          <span className="ml-2 text-micro text-zinc-600">Changes apply to new Codev sessions</span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => void checkHealth()}
             disabled={checking}
             className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
-            title="Runs `claude mcp list` to verify each server connects"
+            title="Runs `codev mcp list` to verify each server connects"
           >
             {checking ? <Loader2 size={12} className="animate-spin" /> : <Activity size={12} />}
             {checking ? 'Checking…' : 'Check health'}
@@ -504,7 +504,7 @@ export function McpPage(): React.ReactElement {
                               onClick={() => void handleAuthenticate(server.name)}
                               disabled={authBusy !== null}
                               className="flex items-center gap-1 rounded px-2 py-1 text-meta font-medium text-amber-400 hover:bg-amber-950/50 disabled:cursor-not-allowed disabled:opacity-50"
-                              title="Opens your browser to authenticate (claude mcp login)"
+                              title="Opens your browser to authenticate (codev mcp login)"
                             >
                               {authBusy === server.name ? <Loader2 size={12} className="animate-spin" /> : <KeyRound size={12} />}
                               {authBusy === server.name ? 'Waiting for browser…' : 'Authenticate'}
@@ -515,7 +515,7 @@ export function McpPage(): React.ReactElement {
                               onClick={() => void handleLogout(server.name)}
                               disabled={authBusy !== null}
                               className="rounded p-1.5 text-zinc-600 hover:bg-zinc-800 hover:text-zinc-300 disabled:opacity-50"
-                              title="Clear stored OAuth credentials (claude mcp logout)"
+                              title="Clear stored OAuth credentials (codev mcp logout)"
                             >
                               {authBusy === server.name ? <Loader2 size={13} className="animate-spin" /> : <LogOut size={13} />}
                             </button>
@@ -564,7 +564,7 @@ export function McpPage(): React.ReactElement {
                 <Plug size={11} />
                 Connectors & plugins
                 <span className="normal-case tracking-normal text-zinc-600">
-                  — managed by claude.ai or Claude Code plugins, not editable here
+                  — managed by Codev or its plugins, not editable here
                 </span>
               </div>
               <div className="overflow-hidden rounded-lg border border-zinc-800">
@@ -583,7 +583,7 @@ export function McpPage(): React.ReactElement {
                         onClick={() => void handleAuthenticate(entry.name)}
                         disabled={authBusy !== null}
                         className="flex items-center gap-1 rounded px-2 py-1 text-meta font-medium text-amber-400 hover:bg-amber-950/50 disabled:cursor-not-allowed disabled:opacity-50"
-                        title="Opens your browser to authenticate (claude mcp login)"
+                        title="Opens your browser to authenticate (codev mcp login)"
                       >
                         {authBusy === entry.name ? <Loader2 size={12} className="animate-spin" /> : <KeyRound size={12} />}
                         {authBusy === entry.name ? 'Waiting for browser…' : 'Authenticate'}
@@ -594,7 +594,7 @@ export function McpPage(): React.ReactElement {
                         onClick={() => void handleLogout(entry.name)}
                         disabled={authBusy !== null}
                         className="rounded p-1.5 text-zinc-600 hover:bg-zinc-800 hover:text-zinc-300 disabled:opacity-50"
-                        title="Clear stored OAuth credentials (claude mcp logout)"
+                        title="Clear stored OAuth credentials (codev mcp logout)"
                       >
                         {authBusy === entry.name ? <Loader2 size={13} className="animate-spin" /> : <LogOut size={13} />}
                       </button>
@@ -641,7 +641,7 @@ export function McpPage(): React.ReactElement {
                           onClick={() => void handleCatalogAdd(entry, 'user')}
                           disabled={busyKey === `catalog:user:${entry.id}`}
                           className="flex items-center gap-1 rounded bg-zinc-800 px-2 py-1 text-meta font-medium text-zinc-200 hover:bg-zinc-700 disabled:opacity-60"
-                          title="Add for all projects (~/.claude.json)"
+                          title="Add for all projects (~/.codevJ)"
                         >
                           {busyKey === `catalog:user:${entry.id}` ? (
                             <Loader2 size={10} className="animate-spin" />

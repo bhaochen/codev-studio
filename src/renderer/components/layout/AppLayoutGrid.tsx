@@ -23,9 +23,9 @@ import { useLayoutStore } from '@/stores/layout-store'
 import { StatusBar } from '@/components/layout/StatusBar'
 import { PanelErrorBoundary } from '@/components/layout/PanelErrorBoundary'
 import { useLlmCapabilities } from '@/hooks/useLlmCapabilities'
-import { ClaudeFileList } from '@/components/claude/ClaudeFileList'
-import { ClaudeEditor } from '@/components/claude/ClaudeEditor'
-import { ClaudePage } from '@/components/claude/ClaudePage'
+import { CodevFileList } from '@/components/codev/CodevFileList'
+import { CodevEditor } from '@/components/codev/CodevEditor'
+import { CodevPage } from '@/components/codev/CodevPage'
 import { SkillsPanel } from '@/components/skills/SkillsPanel'
 import { SkillsPage } from '@/components/skills/SkillsPage'
 import { McpPage } from '@/components/mcp/McpPage'
@@ -127,7 +127,7 @@ export function AppLayoutGrid(): React.ReactElement {
   const statisticsActive = useProjectStore((s) => s.statisticsActive)
   const usageActive = useProjectStore((s) => s.usageActive)
   const settingsActive = useProjectStore((s) => s.settingsActive)
-  const claudePageActive = useProjectStore((s) => s.claudePageActive)
+  const codevPageActive = useProjectStore((s) => s.codevPageActive)
   const skillsPageActive = useProjectStore((s) => s.skillsPageActive)
   const mcpPageActive = useProjectStore((s) => s.mcpPageActive)
   const terminalsPageActive = useProjectStore((s) => s.terminalsPageActive)
@@ -141,13 +141,13 @@ export function AppLayoutGrid(): React.ReactElement {
   const showStatistics = useProjectStore((s) => s.showStatistics)
   const showUsage = useProjectStore((s) => s.showUsage)
   const showSettings = useProjectStore((s) => s.showSettings)
-  const showClaudePage = useProjectStore((s) => s.showClaudePage)
+  const showCodevPage = useProjectStore((s) => s.showCodevPage)
   const showSkillsPage = useProjectStore((s) => s.showSkillsPage)
   const showMcpPage = useProjectStore((s) => s.showMcpPage)
   const showTerminalsPage = useProjectStore((s) => s.showTerminalsPage)
   const showDevServersPage = useProjectStore((s) => s.showDevServersPage)
   const llmCapabilities = useLlmCapabilities()
-  const anyPageActive = dashboardActive || statisticsActive || usageActive || settingsActive || claudePageActive || skillsPageActive || mcpPageActive || terminalsPageActive || devServersPageActive
+  const anyPageActive = dashboardActive || statisticsActive || usageActive || settingsActive || codevPageActive || skillsPageActive || mcpPageActive || terminalsPageActive || devServersPageActive
   const centerTab = useEditorStore(
     (s) => (activeProjectId ? s.centerTabPerProject[activeProjectId] ?? 'terminals' : 'terminals')
   )
@@ -178,12 +178,12 @@ export function AppLayoutGrid(): React.ReactElement {
 
   useEffect(() => {
     const stranded =
-      (claudePageActive && !llmCapabilities.configFiles) ||
+      (codevPageActive && !llmCapabilities.configFiles) ||
       (skillsPageActive && !llmCapabilities.skills) ||
       (mcpPageActive && !llmCapabilities.mcp)
     if (stranded) showDashboard()
   }, [
-    claudePageActive,
+    codevPageActive,
     skillsPageActive,
     mcpPageActive,
     llmCapabilities,
@@ -193,7 +193,7 @@ export function AppLayoutGrid(): React.ReactElement {
   useEffect(() => {
     if (!activeProjectId) return
     const strandedTab =
-      (centerTab === 'claude' && !llmCapabilities.configFiles) ||
+      (centerTab === 'codev' && !llmCapabilities.configFiles) ||
       (centerTab === 'skills' && !llmCapabilities.skills)
     if (strandedTab) setCenterTab(activeProjectId, 'terminals')
   }, [activeProjectId, centerTab, llmCapabilities, setCenterTab])
@@ -243,16 +243,16 @@ export function AppLayoutGrid(): React.ReactElement {
         </button>
         {llmCapabilities.configFiles && (
           <button
-            onClick={() => activeProjectId && setCenterTab(activeProjectId, 'claude')}
+            onClick={() => activeProjectId && setCenterTab(activeProjectId, 'codev')}
             className={cn(
               'flex h-full items-center gap-1.5 px-3 text-xs font-medium transition-colors',
-              centerTab === 'claude'
+              centerTab === 'codev'
                 ? 'border-b-2 border-zinc-400 text-zinc-200'
                 : 'text-zinc-500 hover:text-zinc-300'
             )}
           >
             <Bot size={12} />
-            Claude
+            Codev
           </button>
         )}
         {llmCapabilities.skills && (
@@ -318,18 +318,18 @@ export function AppLayoutGrid(): React.ReactElement {
             </PanelErrorBoundary>
           )}
         </div>
-        <div className={cn('absolute inset-0 bg-zinc-950', centerTab === 'claude' ? 'z-10' : 'z-0 invisible')}>
+        <div className={cn('absolute inset-0 bg-zinc-950', centerTab === 'codev' ? 'z-10' : 'z-0 invisible')}>
           {activeProjectId && (
-            <PanelErrorBoundary label="Claude">
+            <PanelErrorBoundary label="Codev">
               <PanelGroup direction="horizontal">
                 <Panel defaultSize={25} minSize={15} maxSize={40}>
                   <div className="h-full overflow-hidden border-r border-zinc-800 bg-zinc-900">
-                    <ClaudeFileList projectId={activeProjectId} scope="project" />
+                    <CodevFileList projectId={activeProjectId} scope="project" />
                   </div>
                 </Panel>
                 <PanelResizeHandle className="w-1 bg-zinc-800 hover:bg-zinc-700 transition-colors" />
                 <Panel defaultSize={75} minSize={30}>
-                  <ClaudeEditor projectId={activeProjectId} />
+                  <CodevEditor projectId={activeProjectId} />
                 </Panel>
               </PanelGroup>
             </PanelErrorBoundary>
@@ -401,14 +401,14 @@ export function AppLayoutGrid(): React.ReactElement {
             </button>
             {llmCapabilities.configFiles && (
               <button
-                onClick={showClaudePage}
+                onClick={showCodevPage}
                 className={cn(
                   'flex h-10 w-10 items-center justify-center rounded transition-colors',
-                  claudePageActive
+                  codevPageActive
                     ? 'text-zinc-200 bg-zinc-800'
                     : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/60'
                 )}
-                title="Claude"
+                title="Codev"
               >
                 <Bot size={18} />
               </button>
@@ -568,9 +568,9 @@ export function AppLayoutGrid(): React.ReactElement {
             <Settings />
           </div>
         )}
-        {claudePageActive && llmCapabilities.configFiles && (
+        {codevPageActive && llmCapabilities.configFiles && (
           <div className="absolute inset-0 z-10 overflow-hidden bg-zinc-950">
-            <ClaudePage />
+            <CodevPage />
           </div>
         )}
         {skillsPageActive && llmCapabilities.skills && (

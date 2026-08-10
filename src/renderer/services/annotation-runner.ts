@@ -25,7 +25,7 @@ export const annotationRunner = {
     store.setGeneration(projectId, view, { status: 'running', level })
     const job = (async () => {
       try {
-        const result = await window.api.claude.explainDiff(cwd, sourceFromView(view), level)
+        const result = await window.api.codev.explainDiff(cwd, sourceFromView(view), level)
         useAnnotationStore.getState().setResult(projectId, view, {
           diffSha: result.diffSha,
           level: result.level ?? level,

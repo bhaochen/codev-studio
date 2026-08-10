@@ -50,7 +50,7 @@ export function SessionHistoryModal({
     let cancelled = false
     setSessions(null)
     setError(null)
-    window.api.claude
+    window.api.codev
       .listSessions(projectPath)
       .then((rows) => {
         if (!cancelled) setSessions(rows)
@@ -116,7 +116,7 @@ export function SessionHistoryModal({
           )}
           {sessions && sessions.length === 0 && (
             <div className="flex h-full items-center justify-center px-6 text-center text-xs text-zinc-500">
-              No Claude sessions found for this project yet.
+              No Codev sessions found for this project yet.
             </div>
           )}
           {sessions && sessions.length > 0 && (

@@ -59,7 +59,7 @@ vi.mock('node-pty', () => ({
 let registry: IpcRegistry
 let projectPath = ''
 
-const claudeJsonPath = (): string => path.join(state.home, '.claude.json')
+const codevJsonPath = (): string => path.join(state.home, '.codevJ')
 const mcpJsonPath = (): string => path.join(projectPath, '.mcp.json')
 
 const readJson = <T = unknown>(filePath: string): T => JSON.parse(fs.readFileSync(filePath, 'utf-8')) as T
@@ -89,7 +89,7 @@ afterEach(() => {
 
 describe('mcp:list', () => {
   it('merges user, local, and project scopes with enabled flags', async () => {
-    writeJson(claudeJsonPath(), {
+    writeJson(codevJsonPath(), {
       mcpServers: { userSrv: { type: 'http', url: 'https://user.example' } },
       projects: {
         [projectPath]: {
@@ -117,7 +117,7 @@ describe('mcp:list', () => {
   })
 
   it('returns only user servers when no project path is given', async () => {
-    writeJson(claudeJsonPath(), {
+    writeJson(codevJsonPath(), {
       mcpServers: { userSrv: { command: 'x' } },
       projects: { [projectPath]: { mcpServers: { localSrv: { command: 'y' } } } }
     })
@@ -132,16 +132,16 @@ describe('mcp:list', () => {
 })
 
 describe('mcp:upsert', () => {
-  it('writes user-scope servers to ~/.claude.json and trims the name', async () => {
+  it('writes user-scope servers to ~/.codevJ and trims the name', async () => {
     await invoke(registry, 'mcp:upsert', 'user', null, '  srv  ', { command: 'run-it' })
-    const json = readJson<{ mcpServers: Record<string, { command: string }> }>(claudeJsonPath())
+    const json = readJson<{ mcpServers: Record<string, { command: string }> }>(codevJsonPath())
     expect(json.mcpServers.srv).toEqual({ command: 'run-it' })
   })
 
-  it('preserves unrelated keys in ~/.claude.json', async () => {
-    writeJson(claudeJsonPath(), { numStartups: 5, mcpServers: { old: { command: 'keep' } } })
+  it('preserves unrelated keys in ~/.codevJ', async () => {
+    writeJson(codevJsonPath(), { numStartups: 5, mcpServers: { old: { command: 'keep' } } })
     await invoke(registry, 'mcp:upsert', 'user', null, 'srv', { command: 'new' })
-    const json = readJson<{ numStartups: number; mcpServers: Record<string, unknown> }>(claudeJsonPath())
+    const json = readJson<{ numStartups: number; mcpServers: Record<string, unknown> }>(codevJsonPath())
     expect(json.numStartups).toBe(5)
     expect(Object.keys(json.mcpServers).sort()).toEqual(['old', 'srv'])
   })
@@ -152,9 +152,9 @@ describe('mcp:upsert', () => {
     expect(json.mcpServers.srv.url).toBe('https://x')
   })
 
-  it('writes local-scope servers under projects[path] in ~/.claude.json', async () => {
+  it('writes local-scope servers under projects[path] in ~/.codevJ', async () => {
     await invoke(registry, 'mcp:upsert', 'local', projectPath, 'srv', { command: 'z' })
-    const json = readJson<{ projects: Record<string, { mcpServers: Record<string, { command: string }> }> }>(claudeJsonPath())
+    const json = readJson<{ projects: Record<string, { mcpServers: Record<string, { command: string }> }> }>(codevJsonPath())
     expect(json.projects[projectPath].mcpServers.srv).toEqual({ command: 'z' })
   })
 
@@ -180,20 +180,20 @@ describe('mcp:remove', () => {
 describe('mcp:set-enabled', () => {
   it('moves the server between enabled and disabled lists', async () => {
     await invoke(registry, 'mcp:set-enabled', projectPath, 'srv', false)
-    type ClaudeProjects = { projects: Record<string, { enabledMcpjsonServers: string[]; disabledMcpjsonServers: string[] }> }
-    let project = readJson<ClaudeProjects>(claudeJsonPath()).projects[projectPath]
+    type CodevProjects = { projects: Record<string, { enabledMcpjsonServers: string[]; disabledMcpjsonServers: string[] }> }
+    let project = readJson<CodevProjects>(codevJsonPath()).projects[projectPath]
     expect(project.disabledMcpjsonServers).toContain('srv')
     expect(project.enabledMcpjsonServers).not.toContain('srv')
 
     await invoke(registry, 'mcp:set-enabled', projectPath, 'srv', true)
-    project = readJson<ClaudeProjects>(claudeJsonPath()).projects[projectPath]
+    project = readJson<CodevProjects>(codevJsonPath()).projects[projectPath]
     expect(project.enabledMcpjsonServers).toContain('srv')
     expect(project.disabledMcpjsonServers).not.toContain('srv')
   })
 })
 
 describe('mcp:status', () => {
-  it('parses claude mcp list output into health entries', async () => {
+  it('parses codev mcp list output into health entries', async () => {
     state.statusOutput = [
       'Checking MCP server health...',
       '',

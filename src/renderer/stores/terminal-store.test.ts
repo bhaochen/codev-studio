@@ -38,7 +38,7 @@ describe('terminal-store', () => {
     })
 
     it('uses LLM title when an initial command is given', () => {
-      useTerminalStore.getState().createTab('p1', '/cwd', 'claude')
+      useTerminalStore.getState().createTab('p1', '/cwd', 'codev')
       expect(useTerminalStore.getState().tabs[0].title).toBe('LLM')
     })
   })
@@ -104,7 +104,7 @@ describe('terminal-store', () => {
   describe('replaceTab', () => {
     it('swaps an old tab for a new one with the same project', () => {
       const old = useTerminalStore.getState().createTab('p1', '/cwd')
-      const next = useTerminalStore.getState().replaceTab(old, 'p1', '/cwd', 'claude')
+      const next = useTerminalStore.getState().replaceTab(old, 'p1', '/cwd', 'codev')
       const state = useTerminalStore.getState()
       expect(state.tabs.map((t) => t.id)).toEqual([next])
       expect(state.activeTabPerProject.p1).toBe(next)
@@ -159,34 +159,34 @@ describe('terminal-store', () => {
   })
 
   describe('initProject', () => {
-    it('creates a new claude tab when none exist', async () => {
+    it('creates a new codev tab when none exist', async () => {
       await useTerminalStore.getState().initProject('p1', '/cwd')
       const tabs = useTerminalStore.getState().tabs
       expect(tabs).toHaveLength(1)
       expect(tabs[0].title).toBe('LLM')
-      expect(tabs[0].initialCommand).toBe('claude')
+      expect(tabs[0].initialCommand).toBe('codev')
     })
 
     it('skips creation when a live tab exists', async () => {
-      useTerminalStore.getState().createTab('p1', '/cwd', 'claude')
+      useTerminalStore.getState().createTab('p1', '/cwd', 'codev')
       vi.mocked(window.api.terminal.has).mockResolvedValue(true)
       await useTerminalStore.getState().initProject('p1', '/cwd')
       expect(useTerminalStore.getState().tabs).toHaveLength(1)
     })
 
     it('prunes dead tabs and creates a new one if all dead', async () => {
-      const a = useTerminalStore.getState().createTab('p1', '/cwd', 'claude')
+      const a = useTerminalStore.getState().createTab('p1', '/cwd', 'codev')
       vi.mocked(window.api.terminal.has).mockResolvedValueOnce(false)
       await useTerminalStore.getState().initProject('p1', '/cwd')
       const tabs = useTerminalStore.getState().tabs
       expect(tabs.find((t) => t.id === a)).toBeUndefined()
       expect(tabs).toHaveLength(1)
-      expect(tabs[0].initialCommand).toBe('claude')
+      expect(tabs[0].initialCommand).toBe('codev')
     })
 
     it('keeps live tabs when one of multiple is dead, no new creation', async () => {
-      const a = useTerminalStore.getState().createTab('p1', '/cwd', 'claude')
-      const b = useTerminalStore.getState().createTab('p1', '/cwd', 'claude')
+      const a = useTerminalStore.getState().createTab('p1', '/cwd', 'codev')
+      const b = useTerminalStore.getState().createTab('p1', '/cwd', 'codev')
       vi.mocked(window.api.terminal.has)
         .mockResolvedValueOnce(false)
         .mockResolvedValueOnce(true)

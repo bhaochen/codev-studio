@@ -94,10 +94,10 @@ export interface SearchResult {
   lineContent?: string
 }
 
-export type ClaudeSection = 'global' | 'hooks' | 'skills' | 'commands' | 'project'
+export type CodevSection = 'global' | 'hooks' | 'skills' | 'commands' | 'project'
 
-export interface ClaudeFileEntry {
+export interface CodevFileEntry {
   name: string
   path: string
-  section: ClaudeSection
+  section: CodevSection
 }

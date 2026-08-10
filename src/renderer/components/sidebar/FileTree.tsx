@@ -495,7 +495,7 @@ export function FileTree({
     <div className="flex h-full flex-col">
       <div className="flex h-9 shrink-0 items-center justify-between border-b border-zinc-800 bg-zinc-900/50 px-3">
         <span className="text-meta font-medium uppercase tracking-wide text-zinc-500">
-          {isOverride ? 'Claude config' : 'Explorer'}
+          {isOverride ? 'Codev config' : 'Explorer'}
         </span>
         <div className="flex items-center gap-0.5">
           <button

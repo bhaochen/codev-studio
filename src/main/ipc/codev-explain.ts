@@ -137,7 +137,7 @@ function shaOf(text: string): string {
   return crypto.createHash('sha1').update(text).digest('hex').slice(0, 12)
 }
 
-interface ClaudeResultEvent {
+interface CodevResultEvent {
   type: 'result'
   subtype?: string
   is_error?: boolean
@@ -145,26 +145,26 @@ interface ClaudeResultEvent {
   structured_output?: unknown
 }
 
-export function parseClaudeJsonEnvelope(stdout: string): ExplainResult {
+export function parseCodevJsonEnvelope(stdout: string): ExplainResult {
   const trimmed = stdout.trim()
-  if (!trimmed) throw new Error('claude -p returned empty output')
+  if (!trimmed) throw new Error('codev -p returned empty output')
 
   let parsed: unknown
   try {
     parsed = JSON.parse(trimmed)
   } catch {
-    throw new Error('claude -p output was not valid JSON')
+    throw new Error('codev -p output was not valid JSON')
   }
 
-  // claude -p --output-format json emits an array of streamed events; the final
+  // codev -p --output-format json emits an array of streamed events; the final
   // event has type "result" and carries structured_output when --json-schema is set.
   const events: unknown[] = Array.isArray(parsed) ? parsed : [parsed]
   const resultEvent = events.find(
-    (e): e is ClaudeResultEvent => !!e && typeof e === 'object' && (e as { type?: unknown }).type === 'result'
+    (e): e is CodevResultEvent => !!e && typeof e === 'object' && (e as { type?: unknown }).type === 'result'
   )
-  if (!resultEvent) throw new Error('claude -p produced no result event')
+  if (!resultEvent) throw new Error('codev -p produced no result event')
   if (resultEvent.is_error) {
-    const msg = typeof resultEvent.result === 'string' ? resultEvent.result : 'claude -p reported an error'
+    const msg = typeof resultEvent.result === 'string' ? resultEvent.result : 'codev -p reported an error'
     throw new Error(msg)
   }
 
@@ -181,10 +181,10 @@ export function parseClaudeJsonEnvelope(stdout: string): ExplainResult {
       }
     }
   }
-  throw new Error('claude -p result event had no structured output')
+  throw new Error('codev -p result event had no structured output')
 }
 
-function runClaude(projectRoot: string, diffText: string, level: ExplainLevel): Promise<string> {
+function runCodev(projectRoot: string, diffText: string, level: ExplainLevel): Promise<string> {
   return new Promise((resolve, reject) => {
     const args = [
       '-p',
@@ -200,7 +200,7 @@ function runClaude(projectRoot: string, diffText: string, level: ExplainLevel): 
     const extraPath = ['/opt/homebrew/bin', '/usr/local/bin', `${home}/.local/bin`].filter(Boolean).join(':')
     const envPath = `${extraPath}:${process.env.PATH ?? ''}`
 
-    const proc = spawn('claude', args, {
+    const proc = spawn('codev', args, {
       cwd: projectRoot,
       env: { ...process.env, PATH: envPath }
     })
@@ -212,14 +212,14 @@ function runClaude(projectRoot: string, diffText: string, level: ExplainLevel): 
 
     proc.on('error', (err) => {
       const msg = (err as NodeJS.ErrnoException).code === 'ENOENT'
-        ? 'claude CLI not found on PATH. Install it from https://docs.anthropic.com/claude/code'
-        : `Failed to start claude: ${err.message}`
+        ? 'codev CLI not found on PATH. Install it from https://docs.anthropic.com/codev/code'
+        : `Failed to start codev: ${err.message}`
       reject(new Error(msg))
     })
 
     proc.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error(`claude -p exited with code ${code}: ${stderr.trim() || stdout.trim().slice(0, 200)}`))
+        reject(new Error(`codev -p exited with code ${code}: ${stderr.trim() || stdout.trim().slice(0, 200)}`))
         return
       }
       resolve(stdout)
@@ -242,8 +242,8 @@ export async function explainDiff({ projectRoot, diffText, source, level }: Expl
     }
   }
 
-  const stdout = await runClaude(projectRoot, diff, resolvedLevel)
-  const parsed = parseClaudeJsonEnvelope(stdout)
+  const stdout = await runCodev(projectRoot, diff, resolvedLevel)
+  const parsed = parseCodevJsonEnvelope(stdout)
 
   return {
     generatedAt: new Date().toISOString(),
@@ -253,8 +253,8 @@ export async function explainDiff({ projectRoot, diffText, source, level }: Expl
   }
 }
 
-export function registerClaudeExplainHandlers(): void {
-  safeHandle('claude:explain-diff', async (_event, args: ExplainArgs): Promise<ExplainResult> => {
+export function registerCodevExplainHandlers(): void {
+  safeHandle('codev:explain-diff', async (_event, args: ExplainArgs): Promise<ExplainResult> => {
     return explainDiff(args)
   })
 }

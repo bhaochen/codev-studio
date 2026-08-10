@@ -19,7 +19,7 @@ The editor is still there when you need to peek at something, but it's intention
 
 ## Screenshots
 
-![vbcdr workspace: dev terminals, Claude Code terminal, and git tree with working changes](docs/screenshot-hero.png)
+![vbcdr workspace: dev terminals, Codev terminal, and git tree with working changes](docs/screenshot-hero.png)
 
 ![Sortable projects analytics table with active days and totals](docs/screenshot-projects.png)
 
@@ -36,19 +36,19 @@ The editor is still there when you need to peek at something, but it's intention
 ### Terminals (the main stage)
 
 - **Multiple terminals per project** with WebGL rendering, search, and scrollback persistence across app restarts
-- **LLM terminal + dev terminals** — a dedicated panel for the LLM coding agent (Claude Code by default) and a separate panel for dev terminals
-- **Dynamic tab labels** that reflect Claude Code's current state, with busy/idle status indicators
+- **LLM terminal + dev terminals** — a dedicated panel for the LLM coding agent (Codev by default) and a separate panel for dev terminals
+- **Dynamic tab labels** that reflect Codev's current state, with busy/idle status indicators
 - **Permissions presets** — switch between read-only / auto-accept / yolo modes per terminal with a single button
 - **Task queue panel** — line up prompts and feed them to the LLM terminal one by one
 - **Shift+Enter newlines** — insert newlines in LLM coding terminal input without submitting (kitty keyboard protocol)
 - **File drag-and-drop** into terminals for quick context; images auto-attach via clipboard
 - **Idle sound** — optional notification sound when the LLM goes idle
-- **Configurable LLM startup command** — defaults to `claude`, swap in any CLI agent
+- **Configurable LLM startup command** — defaults to `codev`, swap in any CLI agent
 
-### Claude Code integration
+### Codev integration
 
-- **Claude config editor** — edit `~/.claude` settings, CLAUDE.md files, and global config directly from the UI
-- **Skills page** — browse and install Claude Code skills with per-scope (project/user) install buttons
+- **Codev config editor** — edit `~/.claude` settings, CLAUDE.md files, and global config directly from the UI
+- **Skills page** — browse and install Codev skills with per-scope (project/user) install buttons
 - **Activity feed** — live stream of file changes and commands surfaced after each terminal action
 - **Token velocity dashboard** — per-project token usage history, active-day tracking, sortable analytics table across all projects
 - **Token cap** with per-project sparkline

@@ -20,9 +20,9 @@ interface ProjectCardProps {
   onOpenModal: () => void
 }
 
-type ClaudeStatus = 'busy' | 'idle' | 'none'
+type CodevStatus = 'busy' | 'idle' | 'none'
 
-function useClaudeStatus(projectId: string): ClaudeStatus {
+function useCodevStatus(projectId: string): CodevStatus {
   const tabs = useTerminalStore((s) => s.tabs)
   const statuses = useTerminalStore((s) => s.tabStatuses)
   const llmTabs = tabs.filter((t) => t.projectId === projectId && t.initialCommand)
@@ -44,7 +44,7 @@ function useProjectTabs(projectId: string): { llmTabs: TerminalTab[]; devTabs: T
 export function ProjectCard({ project, onOpenModal }: ProjectCardProps): React.ReactElement {
   const branches = useGitStore((s) => s.branchesPerProject[project.id] ?? EMPTY_BRANCHES)
   const openFilesCount = useEditorStore((s) => s.statePerProject[project.id]?.openFiles.length ?? 0)
-  const claudeStatus = useClaudeStatus(project.id)
+  const codevStatus = useCodevStatus(project.id)
   const { llmTabs, devTabs } = useProjectTabs(project.id)
   const tabStatuses = useTerminalStore((s) => s.tabStatuses)
   const tokenUsagePerTab = useTerminalStore((s) => s.tokenUsagePerTab)
@@ -76,11 +76,11 @@ export function ProjectCard({ project, onOpenModal }: ProjectCardProps): React.R
           <span
             className={cn(
               'inline-block h-2 w-2 shrink-0 rounded-full',
-              claudeStatus === 'busy' && 'animate-pulse bg-amber-400',
-              claudeStatus === 'idle' && 'bg-emerald-400',
-              claudeStatus === 'none' && 'bg-zinc-600'
+              codevStatus === 'busy' && 'animate-pulse bg-amber-400',
+              codevStatus === 'idle' && 'bg-emerald-400',
+              codevStatus === 'none' && 'bg-zinc-600'
             )}
-            title={claudeStatus === 'busy' ? `${llmLabel} is working` : claudeStatus === 'idle' ? `${llmLabel} idle` : `No ${llmLabel} session`}
+            title={codevStatus === 'busy' ? `${llmLabel} is working` : codevStatus === 'idle' ? `${llmLabel} idle` : `No ${llmLabel} session`}
           />
           <span className="truncate font-medium text-zinc-200">{project.name}</span>
           {currentBranch && (

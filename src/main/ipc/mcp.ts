@@ -12,8 +12,8 @@ const LOGIN_TIMEOUT_MS = 300_000
 
 type JsonObject = Record<string, unknown>
 
-function claudeJsonPath(): string {
-  return path.join(os.homedir(), '.claude.json')
+function codevJsonPath(): string {
+  return path.join(os.homedir(), '.codevJ')
 }
 
 function projectMcpJsonPath(projectPath: string): string {
@@ -40,21 +40,21 @@ function serversFrom(obj: unknown): Record<string, McpServerConfig> {
   return obj as Record<string, McpServerConfig>
 }
 
-function projectEntry(claudeJson: JsonObject, projectPath: string): JsonObject {
-  const projects = (claudeJson.projects ?? {}) as JsonObject
+function projectEntry(codevJson: JsonObject, projectPath: string): JsonObject {
+  const projects = (codevJson.projects ?? {}) as JsonObject
   return (projects[projectPath] ?? {}) as JsonObject
 }
 
 function listServers(projectPath: string | null): McpServerEntry[] {
   const entries: McpServerEntry[] = []
-  const claudeJson = readJsonFile(claudeJsonPath())
+  const codevJson = readJsonFile(codevJsonPath())
 
-  for (const [name, config] of Object.entries(serversFrom(claudeJson.mcpServers))) {
+  for (const [name, config] of Object.entries(serversFrom(codevJson.mcpServers))) {
     entries.push({ name, scope: 'user', config, enabled: true })
   }
 
   if (projectPath) {
-    const project = projectEntry(claudeJson, projectPath)
+    const project = projectEntry(codevJson, projectPath)
     for (const [name, config] of Object.entries(serversFrom(project.mcpServers))) {
       entries.push({ name, scope: 'local', config, enabled: true })
     }
@@ -87,29 +87,29 @@ function mutateScope(
     return
   }
 
-  const filePath = claudeJsonPath()
-  const claudeJson = readJsonFile(filePath)
+  const filePath = codevJsonPath()
+  const codevJson = readJsonFile(filePath)
   if (scope === 'user') {
-    const servers = serversFrom(claudeJson.mcpServers)
+    const servers = serversFrom(codevJson.mcpServers)
     mutate(servers)
-    claudeJson.mcpServers = servers
+    codevJson.mcpServers = servers
   } else {
     if (!projectPath) throw new Error('Local scope requires an active project')
-    const projects = (claudeJson.projects ?? {}) as JsonObject
+    const projects = (codevJson.projects ?? {}) as JsonObject
     const project = (projects[projectPath] ?? {}) as JsonObject
     const servers = serversFrom(project.mcpServers)
     mutate(servers)
     project.mcpServers = servers
     projects[projectPath] = project
-    claudeJson.projects = projects
+    codevJson.projects = projects
   }
-  writeJsonFileAtomic(filePath, claudeJson)
+  writeJsonFileAtomic(filePath, codevJson)
 }
 
 function setProjectServerEnabled(projectPath: string, name: string, enabled: boolean): void {
-  const filePath = claudeJsonPath()
-  const claudeJson = readJsonFile(filePath)
-  const projects = (claudeJson.projects ?? {}) as JsonObject
+  const filePath = codevJsonPath()
+  const codevJson = readJsonFile(filePath)
+  const projects = (codevJson.projects ?? {}) as JsonObject
   const project = (projects[projectPath] ?? {}) as JsonObject
   const enabledList = new Set(
     Array.isArray(project.enabledMcpjsonServers) ? (project.enabledMcpjsonServers as string[]) : []
@@ -127,8 +127,8 @@ function setProjectServerEnabled(projectPath: string, name: string, enabled: boo
   project.enabledMcpjsonServers = Array.from(enabledList)
   project.disabledMcpjsonServers = Array.from(disabledList)
   projects[projectPath] = project
-  claudeJson.projects = projects
-  writeJsonFileAtomic(filePath, claudeJson)
+  codevJson.projects = projects
+  writeJsonFileAtomic(filePath, codevJson)
 }
 
 function parseHealth(text: string): McpHealth {
@@ -157,11 +157,11 @@ function parseStatusOutput(output: string): McpStatusEntry[] {
   return entries
 }
 
-function runClaudeMcpList(cwd: string): Promise<McpStatusEntry[]> {
+function runCodevMcpList(cwd: string): Promise<McpStatusEntry[]> {
   return new Promise((resolve, reject) => {
     const proc = IS_WINDOWS
-      ? spawn('claude', ['mcp', 'list'], { cwd, shell: true })
-      : spawn(process.env.SHELL || '/bin/zsh', ['-lc', 'claude mcp list'], { cwd })
+      ? spawn('codev', ['mcp', 'list'], { cwd, shell: true })
+      : spawn(process.env.SHELL || '/bin/zsh', ['-lc', 'codev mcp list'], { cwd })
     let output = ''
     let settled = false
     const timer = setTimeout(() => {
@@ -179,7 +179,7 @@ function runClaudeMcpList(cwd: string): Promise<McpStatusEntry[]> {
       if (settled) return
       settled = true
       clearTimeout(timer)
-      reject(new Error(`Could not run claude CLI: ${err.message}`))
+      reject(new Error(`Could not run codev CLI: ${err.message}`))
     })
     proc.on('close', () => {
       if (settled) return
@@ -195,7 +195,7 @@ function stripAnsi(text: string): string {
   return text.replace(/\x1b\][^\x07]*(\x07|\x1b\\)/g, '').replace(/\x1b\[[0-9;?]*[a-zA-Z]/g, '').replace(/\r/g, '')
 }
 
-function runClaudeMcpAuth(
+function runCodevMcpAuth(
   cwd: string,
   action: 'login' | 'logout',
   name: string
@@ -204,14 +204,14 @@ function runClaudeMcpAuth(
     let proc: pty.IPty
     try {
       proc = IS_WINDOWS
-        ? pty.spawn('cmd.exe', ['/c', 'claude', 'mcp', action, name], {
+        ? pty.spawn('cmd.exe', ['/c', 'codev', 'mcp', action, name], {
             name: 'xterm-256color',
             cols: 120,
             rows: 30,
             cwd,
             env: { ...process.env } as Record<string, string>
           })
-        : pty.spawn(process.env.SHELL || '/bin/zsh', ['-lc', `claude mcp ${action} "$0"`, name], {
+        : pty.spawn(process.env.SHELL || '/bin/zsh', ['-lc', `codev mcp ${action} "$0"`, name], {
             name: 'xterm-256color',
             cols: 120,
             rows: 30,
@@ -219,7 +219,7 @@ function runClaudeMcpAuth(
             env: { ...process.env } as Record<string, string>
           })
     } catch (err) {
-      reject(new Error(`Could not run claude CLI: ${err instanceof Error ? err.message : String(err)}`))
+      reject(new Error(`Could not run codev CLI: ${err instanceof Error ? err.message : String(err)}`))
       return
     }
     let output = ''
@@ -274,20 +274,20 @@ export function registerMcpHandlers(): void {
   )
 
   safeHandle('mcp:status', async (_event, projectPath: string | null): Promise<McpStatusEntry[]> => {
-    return runClaudeMcpList(projectPath ?? os.homedir())
+    return runCodevMcpList(projectPath ?? os.homedir())
   })
 
   safeHandle(
     'mcp:login',
     async (_event, projectPath: string | null, name: string): Promise<{ code: number; output: string }> => {
-      return runClaudeMcpAuth(projectPath ?? os.homedir(), 'login', name)
+      return runCodevMcpAuth(projectPath ?? os.homedir(), 'login', name)
     }
   )
 
   safeHandle(
     'mcp:logout',
     async (_event, projectPath: string | null, name: string): Promise<{ code: number; output: string }> => {
-      return runClaudeMcpAuth(projectPath ?? os.homedir(), 'logout', name)
+      return runCodevMcpAuth(projectPath ?? os.homedir(), 'logout', name)
     }
   )
 }

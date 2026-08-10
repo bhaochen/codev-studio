@@ -10,12 +10,12 @@ import {
 
 describe('providerIdForCommand', () => {
   it('maps bare binaries to their provider', () => {
-    expect(providerIdForCommand('claude')).toBe('claude')
+    expect(providerIdForCommand('codev')).toBe('codev')
     expect(providerIdForCommand('codex')).toBe('codex')
   })
 
   it('treats a known binary with flags as custom so the flags survive', () => {
-    expect(providerIdForCommand('claude --resume')).toBe('custom')
+    expect(providerIdForCommand('codev --resume')).toBe('custom')
     expect(providerIdForCommand('codex exec')).toBe('custom')
   })
 
@@ -25,8 +25,8 @@ describe('providerIdForCommand', () => {
   })
 
   it('falls back to the default for blank input', () => {
-    expect(providerIdForCommand('')).toBe('claude')
-    expect(providerIdForCommand('   ')).toBe('claude')
+    expect(providerIdForCommand('')).toBe('codev')
+    expect(providerIdForCommand('   ')).toBe('codev')
   })
 
   it('ignores surrounding whitespace', () => {
@@ -36,12 +36,12 @@ describe('providerIdForCommand', () => {
 
 describe('resolveStartupCommand', () => {
   it('uses the registry command for known providers', () => {
-    expect(resolveStartupCommand('claude', '')).toBe('claude')
+    expect(resolveStartupCommand('codev', '')).toBe('codev')
     expect(resolveStartupCommand('codex', 'ignored')).toBe('codex')
   })
 
   it('uses the custom command for the custom provider', () => {
-    expect(resolveStartupCommand('custom', 'claude --resume')).toBe('claude --resume')
+    expect(resolveStartupCommand('custom', 'codev --resume')).toBe('codev --resume')
   })
 
   it('returns empty for a blank custom command', () => {
@@ -50,15 +50,15 @@ describe('resolveStartupCommand', () => {
 })
 
 describe('capabilitiesFor', () => {
-  it('grants claude the full feature set', () => {
-    const caps = capabilitiesFor('claude')
+  it('grants codev the full feature set', () => {
+    const caps = capabilitiesFor('codev')
     expect(caps.sessions).toBe(true)
     expect(caps.mcp).toBe(true)
     expect(caps.skills).toBe(true)
     expect(caps.permissions).toBe(true)
   })
 
-  it('withholds claude-specific features from codex', () => {
+  it('withholds codev-specific features from codex', () => {
     const caps = capabilitiesFor('codex')
     expect(caps.sessions).toBe(false)
     expect(caps.mcp).toBe(false)
@@ -72,8 +72,8 @@ describe('capabilitiesFor', () => {
 })
 
 describe('clearContextCommandFor', () => {
-  it('returns the slash command for claude', () => {
-    expect(clearContextCommandFor('claude')).toBe('/clear')
+  it('returns the slash command for codev', () => {
+    expect(clearContextCommandFor('codev')).toBe('/clear')
   })
 
   it('returns null for providers without a known clear command', () => {
@@ -84,7 +84,7 @@ describe('clearContextCommandFor', () => {
 
 describe('isLlmProviderId', () => {
   it('accepts known ids and rejects anything else', () => {
-    expect(isLlmProviderId('claude')).toBe(true)
+    expect(isLlmProviderId('codev')).toBe(true)
     expect(isLlmProviderId('codex')).toBe(true)
     expect(isLlmProviderId('custom')).toBe(true)
     expect(isLlmProviderId('gemini')).toBe(false)
@@ -93,7 +93,7 @@ describe('isLlmProviderId', () => {
 })
 
 describe('SELECTABLE_LLM_PROVIDERS', () => {
-  it('offers claude, codex and an escape hatch', () => {
-    expect(SELECTABLE_LLM_PROVIDERS.map((p) => p.id)).toEqual(['claude', 'codex', 'custom'])
+  it('offers codev, codex and an escape hatch', () => {
+    expect(SELECTABLE_LLM_PROVIDERS.map((p) => p.id)).toEqual(['codev', 'codex', 'custom'])
   })
 })

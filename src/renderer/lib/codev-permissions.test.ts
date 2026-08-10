@@ -12,9 +12,9 @@ import {
   readSettings,
   writeSettings,
   DEFAULT_VIEW,
-  type ClaudeSettings,
+  type CodevSettings,
   type PresetLike
-} from './claude-permissions'
+} from './codev-permissions'
 
 describe('settingsLocalPath', () => {
   it('joins project path with .claude/settings.local.json', () => {
@@ -53,7 +53,7 @@ describe('toView', () => {
   })
 
   it('clones lists so callers cannot mutate the source', () => {
-    const settings: ClaudeSettings = { permissions: { allow: ['Read'] } }
+    const settings: CodevSettings = { permissions: { allow: ['Read'] } }
     const view = toView(settings)
     view.allow.push('Write')
     expect(settings.permissions?.allow).toEqual(['Read'])
@@ -88,7 +88,7 @@ describe('addRule', () => {
   })
 
   it('does not duplicate', () => {
-    const settings: ClaudeSettings = { permissions: { allow: ['Read'] } }
+    const settings: CodevSettings = { permissions: { allow: ['Read'] } }
     expect(addRule(settings, 'allow', 'Read')).toBe(settings)
   })
 
@@ -99,7 +99,7 @@ describe('addRule', () => {
   })
 
   it('ignores empty rules', () => {
-    const settings: ClaudeSettings = {}
+    const settings: CodevSettings = {}
     expect(addRule(settings, 'allow', '   ')).toBe(settings)
   })
 })
@@ -126,7 +126,7 @@ describe('removeRule', () => {
 
   it('preserves unmanaged top-level keys', () => {
     expect(
-      removeRule({ hooks: {}, permissions: { allow: ['Read'] } } as ClaudeSettings, 'allow', 'Read')
+      removeRule({ hooks: {}, permissions: { allow: ['Read'] } } as CodevSettings, 'allow', 'Read')
     ).toEqual({ hooks: {} })
   })
 })
@@ -163,21 +163,21 @@ describe('applyPreset', () => {
   })
 
   it('overwrites prior allow/ask/deny entirely', () => {
-    const seeded: ClaudeSettings = { permissions: { allow: ['Old'], ask: ['Other'], deny: ['Bash(rm:*)'] } }
+    const seeded: CodevSettings = { permissions: { allow: ['Old'], ask: ['Other'], deny: ['Bash(rm:*)'] } }
     expect(applyPreset(seeded, strict)).toEqual({
       permissions: { allow: ['Read'], deny: ['Bash(git push *)'] }
     })
   })
 
   it('preserves unmanaged top-level keys', () => {
-    expect(applyPreset({ hooks: {} } as ClaudeSettings, yolo)).toEqual({
+    expect(applyPreset({ hooks: {} } as CodevSettings, yolo)).toEqual({
       hooks: {},
       permissions: { defaultMode: 'bypassPermissions' }
     })
   })
 
   it('clears prior stashed rules', () => {
-    const stashed: ClaudeSettings = {
+    const stashed: CodevSettings = {
       permissions: { defaultMode: 'plan' },
       _vbcdrStashedRules: { allow: ['X'] }
     }
@@ -226,7 +226,7 @@ describe('readSettings / writeSettings', () => {
   beforeEach(() => {
     vi.stubGlobal('window', {
       api: {
-        claude: {
+        codev: {
           readFile: vi.fn(),
           writeFile: vi.fn()
         }
@@ -235,18 +235,18 @@ describe('readSettings / writeSettings', () => {
   })
 
   it('returns {} when read throws (file missing)', async () => {
-    ;(window.api.claude.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('ENOENT'))
+    ;(window.api.codev.readFile as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('ENOENT'))
     expect(await readSettings('/proj')).toEqual({})
   })
 
   it('parses on success', async () => {
-    ;(window.api.claude.readFile as ReturnType<typeof vi.fn>).mockResolvedValue('{"permissions":{"defaultMode":"plan"}}')
+    ;(window.api.codev.readFile as ReturnType<typeof vi.fn>).mockResolvedValue('{"permissions":{"defaultMode":"plan"}}')
     expect(await readSettings('/proj')).toEqual({ permissions: { defaultMode: 'plan' } })
   })
 
   it('writes serialized JSON to settings.local.json', async () => {
     await writeSettings('/proj', { permissions: { defaultMode: 'plan' } })
-    expect(window.api.claude.writeFile).toHaveBeenCalledWith(
+    expect(window.api.codev.writeFile).toHaveBeenCalledWith(
       '/proj/.claude/settings.local.json',
       '{\n  "permissions": {\n    "defaultMode": "plan"\n  }\n}\n',
       '/proj'

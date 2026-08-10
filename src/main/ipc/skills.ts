@@ -294,7 +294,7 @@ export function registerSkillsHandlers(): void {
       scope: 'project' | 'global',
       projectPath: string | null
     ): Promise<{ code: number; output: string }> => {
-      const args = ['add', repo, '-s', skillId, '-a', 'claude-code', '--copy', '-y']
+      const args = ['add', repo, '-s', skillId, '-a', 'codev', '--copy', '-y']
       if (scope === 'global') args.push('-g')
       const cwd =
         scope === 'project' && projectPath ? projectPath : os.homedir()

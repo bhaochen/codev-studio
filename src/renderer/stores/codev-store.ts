@@ -1,22 +1,22 @@
 import { create } from 'zustand'
-import type { ClaudeFileEntry, ClaudeSection } from '@/models/types'
+import type { CodevFileEntry, CodevSection } from '@/models/types'
 
-interface ClaudeStore {
-  filesPerProject: Record<string, ClaudeFileEntry[]>
+interface CodevStore {
+  filesPerProject: Record<string, CodevFileEntry[]>
   activeFilePerProject: Record<string, string | null>
   contentCache: Record<string, string>
-  expandedSections: Record<string, Set<ClaudeSection>>
+  expandedSections: Record<string, Set<CodevSection>>
   projectPaths: Record<string, string>
   loadFiles: (projectId: string, projectPath: string) => Promise<void>
   selectFile: (projectId: string, filePath: string) => Promise<void>
   saveFile: (projectId: string, filePath: string, content: string) => Promise<void>
   deleteFile: (projectId: string, filePath: string, projectPath: string) => Promise<void>
-  toggleSection: (projectId: string, section: ClaudeSection) => void
+  toggleSection: (projectId: string, section: CodevSection) => void
 }
 
-const DEFAULT_EXPANDED = new Set<ClaudeSection>(['global', 'hooks', 'skills', 'commands', 'project'])
+const DEFAULT_EXPANDED = new Set<CodevSection>(['global', 'hooks', 'skills', 'commands', 'project'])
 
-export const useClaudeStore = create<ClaudeStore>((set, get) => ({
+export const useCodevStore = create<CodevStore>((set, get) => ({
   filesPerProject: {},
   activeFilePerProject: {},
   contentCache: {},
@@ -29,7 +29,7 @@ export const useClaudeStore = create<ClaudeStore>((set, get) => ({
     for (const f of oldFiles) {
       delete nextCache[f.path]
     }
-    const files: ClaudeFileEntry[] = await window.api.claude.scanFiles(projectPath)
+    const files: CodevFileEntry[] = await window.api.codev.scanFiles(projectPath)
     set((s) => ({
       filesPerProject: { ...s.filesPerProject, [projectId]: files },
       projectPaths: { ...s.projectPaths, [projectId]: projectPath },
@@ -46,7 +46,7 @@ export const useClaudeStore = create<ClaudeStore>((set, get) => ({
       return
     }
     const projectPath = get().projectPaths[projectId] ?? ''
-    const content: string = await window.api.claude.readFile(filePath, projectPath)
+    const content: string = await window.api.codev.readFile(filePath, projectPath)
     set((s) => ({
       activeFilePerProject: { ...s.activeFilePerProject, [projectId]: filePath },
       contentCache: { ...s.contentCache, [filePath]: content }
@@ -55,14 +55,14 @@ export const useClaudeStore = create<ClaudeStore>((set, get) => ({
 
   saveFile: async (projectId: string, filePath: string, content: string) => {
     const projectPath = get().projectPaths[projectId] ?? ''
-    await window.api.claude.writeFile(filePath, content, projectPath)
+    await window.api.codev.writeFile(filePath, content, projectPath)
     set((s) => ({
       contentCache: { ...s.contentCache, [filePath]: content }
     }))
   },
 
   deleteFile: async (projectId: string, filePath: string, projectPath: string) => {
-    await window.api.claude.deleteFile(filePath, projectPath)
+    await window.api.codev.deleteFile(filePath, projectPath)
     const { contentCache, activeFilePerProject } = get()
     const nextCache = { ...contentCache }
     delete nextCache[filePath]
@@ -76,7 +76,7 @@ export const useClaudeStore = create<ClaudeStore>((set, get) => ({
     await get().loadFiles(projectId, projectPath)
   },
 
-  toggleSection: (projectId: string, section: ClaudeSection) => {
+  toggleSection: (projectId: string, section: CodevSection) => {
     set((s) => {
       const current = s.expandedSections[projectId] ?? new Set(DEFAULT_EXPANDED)
       const next = new Set(current)

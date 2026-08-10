@@ -215,7 +215,7 @@ describe('skills ipc', () => {
       expect(spawnCalls).toHaveLength(1)
       const call = spawnCalls[0]
       expect(call.command.endsWith('npx') || call.command.endsWith('npx.cmd') || call.command.endsWith('npx.exe')).toBe(true)
-      expect(call.args).toEqual(['-y', 'skills', 'add', 'owner/repo', '-s', 'cool-skill', '-a', 'claude-code', '--copy', '-y', '-g'])
+      expect(call.args).toEqual(['-y', 'skills', 'add', 'owner/repo', '-s', 'cool-skill', '-a', 'codev', '--copy', '-y', '-g'])
       expect(call.options.cwd).toBe(os.homedir())
       expect(call.options.shell).toBe(process.platform === 'win32')
 

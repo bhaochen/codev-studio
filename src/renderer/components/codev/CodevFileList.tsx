@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useClaudeStore } from '@/stores/claude-store'
+import { useCodevStore } from '@/stores/codev-store'
 import { useProjectStore } from '@/stores/project-store'
 import { ChevronRight, ChevronDown, File, Globe, Wand2, Terminal, FolderOpen, Webhook, RefreshCw, Trash2 } from 'lucide-react'
-import type { ClaudeSection, ClaudeFileEntry } from '@/models/types'
+import type { CodevSection, CodevFileEntry } from '@/models/types'
 import { FileTree } from '@/components/sidebar/FileTree'
 
 type ViewMode = 'curated' | 'tree'
 
-export type ClaudeScope = 'all' | 'project' | 'global'
+export type CodevScope = 'all' | 'project' | 'global'
 
-const SECTION_CONFIG: { key: ClaudeSection; label: string; Icon: typeof Globe }[] = [
+const SECTION_CONFIG: { key: CodevSection; label: string; Icon: typeof Globe }[] = [
   { key: 'global', label: 'Global', Icon: Globe },
   { key: 'hooks', label: 'Hooks', Icon: Webhook },
   { key: 'skills', label: 'Skills', Icon: Wand2 },
@@ -17,7 +17,7 @@ const SECTION_CONFIG: { key: ClaudeSection; label: string; Icon: typeof Globe }[
   { key: 'project', label: 'Project', Icon: FolderOpen }
 ]
 
-function isSectionInScope(section: ClaudeSection, scope: ClaudeScope): boolean {
+function isSectionInScope(section: CodevSection, scope: CodevScope): boolean {
   if (scope === 'all') return true
   if (scope === 'project') return section === 'project'
   return section !== 'project'
@@ -31,16 +31,16 @@ function SectionGroup({
   projectId,
   projectPath
 }: {
-  section: ClaudeSection
+  section: CodevSection
   label: string
   Icon: typeof Globe
-  files: ClaudeFileEntry[]
+  files: CodevFileEntry[]
   projectId: string
   projectPath: string
 }): React.ReactElement {
-  const expanded = useClaudeStore((s) => s.expandedSections[projectId]?.has(section) ?? true)
-  const activeFile = useClaudeStore((s) => s.activeFilePerProject[projectId])
-  const { toggleSection, selectFile, deleteFile } = useClaudeStore()
+  const expanded = useCodevStore((s) => s.expandedSections[projectId]?.has(section) ?? true)
+  const activeFile = useCodevStore((s) => s.activeFilePerProject[projectId])
+  const { toggleSection, selectFile, deleteFile } = useCodevStore()
 
   if (files.length === 0) return <></>
 
@@ -90,19 +90,19 @@ function SectionGroup({
   )
 }
 
-export function ClaudeFileList({
+export function CodevFileList({
   projectId,
   scope = 'all',
   rootPath
 }: {
   projectId: string
-  scope?: ClaudeScope
+  scope?: CodevScope
   rootPath?: string
 }): React.ReactElement {
   const activeProject = useProjectStore((s) => s.projects.find((p) => p.id === projectId))
-  const files = useClaudeStore((s) => s.filesPerProject[projectId])
-  const activeClaudeFile = useClaudeStore((s) => s.activeFilePerProject[projectId] ?? null)
-  const { loadFiles, selectFile } = useClaudeStore()
+  const files = useCodevStore((s) => s.filesPerProject[projectId])
+  const activeCodevFile = useCodevStore((s) => s.activeFilePerProject[projectId] ?? null)
+  const { loadFiles, selectFile } = useCodevStore()
   const [view, setView] = useState<ViewMode>('curated')
 
   const effectivePath = scope === 'global' ? rootPath : activeProject?.path
@@ -175,7 +175,7 @@ export function ClaudeFileList({
             projectId={projectId}
             rootOverride={scope === 'global' ? effectivePath : `${effectivePath}/.claude`}
             onFileClick={(path) => selectFile(projectId, path)}
-            externalActiveFilePath={activeClaudeFile}
+            externalActiveFilePath={activeCodevFile}
           />
         </div>
       )}

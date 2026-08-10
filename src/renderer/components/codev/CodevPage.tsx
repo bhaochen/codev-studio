@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { GitBranch, History } from 'lucide-react'
-import { ClaudeFileList } from '@/components/claude/ClaudeFileList'
-import { ClaudeEditor } from '@/components/claude/ClaudeEditor'
+import { CodevFileList } from '@/components/codev/CodevFileList'
+import { CodevEditor } from '@/components/codev/CodevEditor'
 import { GitTree } from '@/components/git/GitTree'
 import { TerminalPanel } from '@/components/terminal/TerminalPanel'
 
-const GLOBAL_PID = '__claude_page__'
-const GLOBAL_GIT_PID = '__claude__'
+const GLOBAL_PID = '__codev_page__'
+const GLOBAL_GIT_PID = '__codev__'
 
-export function ClaudePage(): React.ReactElement {
+export function CodevPage(): React.ReactElement {
   const [homeDir, setHomeDir] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    window.api.claude.homePath().then((p) => {
+    window.api.codev.homePath().then((p) => {
       if (!cancelled) setHomeDir(p)
     })
     return () => {
@@ -35,7 +35,7 @@ export function ClaudePage(): React.ReactElement {
       </div>
       <p className="text-meta font-medium text-zinc-300">No version history for ~/.claude</p>
       <p className="max-w-[240px] text-micro leading-relaxed text-zinc-500">
-        Your Claude config isn't tracked by git. Initialize a repo and push it to GitHub to get
+        Your Codev config isn't tracked by git. Initialize a repo and push it to GitHub to get
         version history, backups, and the ability to roll back changes.
       </p>
       <code className="rounded bg-zinc-800/60 px-2 py-1 text-micro text-zinc-400">
@@ -51,14 +51,14 @@ export function ClaudePage(): React.ReactElement {
           <PanelGroup direction="horizontal">
             <Panel defaultSize={25} minSize={15} maxSize={40}>
               <div className="h-full overflow-hidden border-r border-zinc-800 bg-zinc-900">
-                <ClaudeFileList projectId={GLOBAL_PID} scope="global" rootPath={homeDir ?? undefined} />
+                <CodevFileList projectId={GLOBAL_PID} scope="global" rootPath={homeDir ?? undefined} />
               </div>
             </Panel>
             <PanelResizeHandle className="w-1 bg-zinc-800 hover:bg-zinc-700 transition-colors" />
             <Panel defaultSize={75} minSize={30}>
               <PanelGroup direction="vertical">
                 <Panel defaultSize={50} minSize={20}>
-                  <ClaudeEditor projectId={GLOBAL_PID} />
+                  <CodevEditor projectId={GLOBAL_PID} />
                 </Panel>
                 <PanelResizeHandle className="h-1 bg-zinc-800 hover:bg-zinc-700 transition-colors" />
                 <Panel defaultSize={50} minSize={15}>
@@ -67,7 +67,7 @@ export function ClaudePage(): React.ReactElement {
                       <TerminalPanel ownerOverride={ownerOverride} />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-zinc-600">
-                        Starting Claude…
+                        Starting Codev…
                       </div>
                     )}
                   </div>

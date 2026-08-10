@@ -1,4 +1,4 @@
-import type { PermissionMode } from '@/lib/claude-permissions'
+import type { PermissionMode } from '@/lib/codev-permissions'
 
 export interface PermissionProfile {
   templateId: string

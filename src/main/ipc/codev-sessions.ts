@@ -4,7 +4,7 @@ import os from 'os'
 import readline from 'readline'
 import { safeHandle } from '@main/ipc/safe-handle'
 
-export interface ClaudeSessionSummary {
+export interface CodevSessionSummary {
   id: string
   mtime: number
   turnCount: number
@@ -61,7 +61,7 @@ async function summarize(filePath: string): Promise<{
   return { turnCount, firstUserMessage, firstUserTimestamp }
 }
 
-async function listSessions(projectPath: string): Promise<ClaudeSessionSummary[]> {
+async function listSessions(projectPath: string): Promise<CodevSessionSummary[]> {
   const dir = sessionsDirFor(projectPath)
   let names: string[]
   try {
@@ -73,7 +73,7 @@ async function listSessions(projectPath: string): Promise<ClaudeSessionSummary[]
   const jsonlFiles = names.filter((n) => n.endsWith('.jsonl'))
 
   const summaries = await Promise.all(
-    jsonlFiles.map(async (name): Promise<ClaudeSessionSummary | null> => {
+    jsonlFiles.map(async (name): Promise<CodevSessionSummary | null> => {
       const full = path.join(dir, name)
       let stat: fs.Stats
       try {
@@ -100,14 +100,14 @@ async function listSessions(projectPath: string): Promise<ClaudeSessionSummary[]
   )
 
   return summaries
-    .filter((s): s is ClaudeSessionSummary => s !== null)
+    .filter((s): s is CodevSessionSummary => s !== null)
     .sort((a, b) => b.mtime - a.mtime)
 }
 
-export function registerClaudeSessionsHandlers(): void {
+export function registerCodevSessionsHandlers(): void {
   safeHandle(
-    'claude-sessions:list',
-    (_event, projectPath: string): Promise<ClaudeSessionSummary[]> => {
+    'codev-sessions:list',
+    (_event, projectPath: string): Promise<CodevSessionSummary[]> => {
       return listSessions(projectPath)
     }
   )

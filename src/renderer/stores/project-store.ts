@@ -17,7 +17,7 @@ interface ProjectStore {
   statisticsActive: boolean
   usageActive: boolean
   settingsActive: boolean
-  claudePageActive: boolean
+  codevPageActive: boolean
   skillsPageActive: boolean
   mcpPageActive: boolean
   terminalsPageActive: boolean
@@ -31,7 +31,7 @@ interface ProjectStore {
   showStatistics: () => void
   showUsage: () => void
   showSettings: () => void
-  showClaudePage: () => void
+  showCodevPage: () => void
   showSkillsPage: () => void
   showMcpPage: () => void
   showTerminalsPage: () => void
@@ -44,7 +44,7 @@ const PAGES_OFF = {
   statisticsActive: false,
   usageActive: false,
   settingsActive: false,
-  claudePageActive: false,
+  codevPageActive: false,
   skillsPageActive: false,
   mcpPageActive: false,
   terminalsPageActive: false,
@@ -58,7 +58,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   statisticsActive: false,
   usageActive: false,
   settingsActive: false,
-  claudePageActive: false,
+  codevPageActive: false,
   skillsPageActive: false,
   mcpPageActive: false,
   terminalsPageActive: false,
@@ -144,8 +144,8 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
     set({ ...PAGES_OFF, settingsActive: true })
   },
 
-  showClaudePage: () => {
-    set({ ...PAGES_OFF, claudePageActive: true })
+  showCodevPage: () => {
+    set({ ...PAGES_OFF, codevPageActive: true })
   },
 
   showSkillsPage: () => {

@@ -5,9 +5,9 @@ import { registerFilesystemHandlers } from '@main/ipc/filesystem'
 import { registerTerminalHandlers } from '@main/ipc/terminal'
 import { registerClipboardHandlers } from '@main/ipc/clipboard'
 import { registerGitHandlers } from '@main/ipc/git'
-import { registerClaudeConfigHandlers } from '@main/ipc/claude-config'
-import { registerClaudeExplainHandlers } from '@main/ipc/claude-explain'
-import { registerClaudeSessionsHandlers } from '@main/ipc/claude-sessions'
+import { registerCodevConfigHandlers } from '@main/ipc/codev-config'
+import { registerCodevExplainHandlers } from '@main/ipc/codev-explain'
+import { registerCodevSessionsHandlers } from '@main/ipc/codev-sessions'
 import { registerSkillsHandlers } from '@main/ipc/skills'
 import { registerMcpHandlers } from '@main/ipc/mcp'
 import { registerActivityHandlers } from '@main/ipc/activity'
@@ -30,7 +30,7 @@ app.setAboutPanelOptions({
   applicationVersion: app.getVersion(),
   version: '',
   copyright: '© 2026 Jo Vinkenroye',
-  credits: 'A desktop vibe coding environment for Claude Code developers.\nTerminal, editor, and git — all in one window.',
+  credits: 'A desktop vibe coding environment for Codev developers.\nTerminal, editor, and git — all in one window.',
   iconPath: path.join(__dirname, '../../resources/icon.png')
 })
 
@@ -130,9 +130,9 @@ registerFilesystemHandlers()
 registerTerminalHandlers()
 registerClipboardHandlers()
 registerGitHandlers()
-registerClaudeConfigHandlers()
-registerClaudeExplainHandlers()
-registerClaudeSessionsHandlers()
+registerCodevConfigHandlers()
+registerCodevExplainHandlers()
+registerCodevSessionsHandlers()
 registerSkillsHandlers()
 registerMcpHandlers()
 registerUpdaterHandlers()
@@ -246,9 +246,9 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
         click: () => send('center-tab-editor')
       },
       {
-        label: 'Claude Config',
+        label: 'Codev Config',
         accelerator: 'CmdOrCtrl+2',
-        click: () => send('center-tab-claude')
+        click: () => send('center-tab-codev')
       },
       {
         label: 'Skills',
@@ -309,8 +309,8 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
     label: 'Terminal',
     submenu: [
       {
-        label: 'New Claude Terminal',
-        click: () => send('new-claude-terminal')
+        label: 'New Codev Terminal',
+        click: () => send('new-codev-terminal')
       },
       {
         label: 'New Shell Terminal',
@@ -329,8 +329,8 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
       },
       { type: 'separator' },
       {
-        label: 'Restart Claude',
-        click: () => send('restart-claude')
+        label: 'Restart Codev',
+        click: () => send('restart-codev')
       },
       {
         label: 'Clear Context',

@@ -139,7 +139,7 @@ export interface SearchResult {
   lineContent?: string
 }
 
-export type ClaudeSection = 'global' | 'hooks' | 'skills' | 'commands' | 'project'
+export type CodevSection = 'global' | 'hooks' | 'skills' | 'commands' | 'project'
 
 export type McpScope = 'user' | 'project' | 'local'
 
@@ -168,10 +168,10 @@ export interface McpStatusEntry {
   detail: string
 }
 
-export interface ClaudeFileEntry {
+export interface CodevFileEntry {
   name: string
   path: string
-  section: ClaudeSection
+  section: CodevSection
 }
 
 export const DEVICE_CONFIGS: Record<DeviceMode, DeviceConfig> = {

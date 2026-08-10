@@ -35,13 +35,19 @@ interface LayoutState {
 }
 
 export const DEFAULT_TOKEN_CAP = 160_000
-export const DEFAULT_LLM_STARTUP_COMMAND = 'claude'
+export const DEFAULT_LLM_STARTUP_COMMAND = 'codev'
 
 function upgradeLegacyProvider(persisted: unknown): Record<string, unknown> {
   const state = { ...((persisted ?? {}) as Record<string, unknown>) }
   const legacy = state.llmStartupCommand
   delete state.llmStartupCommand
   if (isLlmProviderId(state.llmProviderId)) return state
+  // 旧版本默认启动命令是 'claude';迁移到 codev provider(命令名变为 'codev')
+  if (legacy === 'claude') {
+    state.llmProviderId = 'codev'
+    state.llmCustomCommand = ''
+    return state
+  }
   if (typeof legacy !== 'string' || !legacy.trim()) return state
   const id = providerIdForCommand(legacy)
   state.llmProviderId = id

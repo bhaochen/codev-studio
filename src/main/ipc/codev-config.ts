@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import type { ClaudeFileEntry, ClaudeSection } from '@main/models/types'
+import type { CodevFileEntry, CodevSection } from '@main/models/types'
 import { safeHandle } from '@main/ipc/safe-handle'
 
 const SKIP_DIRS = new Set(['cache', 'debug', 'telemetry', 'todos', 'sessions'])
@@ -15,7 +15,7 @@ function safeReaddir(dir: string): string[] {
   }
 }
 
-function addFiles(dir: string, section: ClaudeSection, entries: ClaudeFileEntry[]): void {
+function addFiles(dir: string, section: CodevSection, entries: CodevFileEntry[]): void {
   for (const name of safeReaddir(dir)) {
     const fullPath = path.join(dir, name)
     const ext = path.extname(name)
@@ -30,23 +30,23 @@ function addFiles(dir: string, section: ClaudeSection, entries: ClaudeFileEntry[
   }
 }
 
-function scanClaudeFiles(projectPath: string): ClaudeFileEntry[] {
-  const claudeDir = path.join(os.homedir(), '.claude')
-  const entries: ClaudeFileEntry[] = []
+function scanCodevFiles(projectPath: string): CodevFileEntry[] {
+  const codevDir = path.join(os.homedir(), '.claude')
+  const entries: CodevFileEntry[] = []
 
-  const claudeMd = path.join(claudeDir, 'CLAUDE.md')
-  if (fs.existsSync(claudeMd)) {
-    entries.push({ name: 'CLAUDE.md', path: claudeMd, section: 'global' })
+  const codevMd = path.join(codevDir, 'CLAUDE.md')
+  if (fs.existsSync(codevMd)) {
+    entries.push({ name: 'CLAUDE.md', path: codevMd, section: 'global' })
   }
 
-  const settingsJson = path.join(claudeDir, 'settings.json')
+  const settingsJson = path.join(codevDir, 'settings.json')
   if (fs.existsSync(settingsJson)) {
     entries.push({ name: 'settings.json', path: settingsJson, section: 'global' })
   }
 
-  addFiles(path.join(claudeDir, 'rules'), 'global', entries)
+  addFiles(path.join(codevDir, 'rules'), 'global', entries)
 
-  const skillsDir = path.join(claudeDir, 'skills')
+  const skillsDir = path.join(codevDir, 'skills')
   for (const skillName of safeReaddir(skillsDir)) {
     const skillDir = path.join(skillsDir, skillName)
     try {
@@ -74,35 +74,35 @@ function scanClaudeFiles(projectPath: string): ClaudeFileEntry[] {
     }
   }
 
-  addFiles(path.join(claudeDir, 'commands'), 'commands', entries)
+  addFiles(path.join(codevDir, 'commands'), 'commands', entries)
 
-  addFiles(path.join(claudeDir, 'scripts'), 'hooks', entries)
+  addFiles(path.join(codevDir, 'scripts'), 'hooks', entries)
 
-  const keybindingsJson = path.join(claudeDir, 'keybindings.json')
+  const keybindingsJson = path.join(codevDir, 'keybindings.json')
   if (fs.existsSync(keybindingsJson)) {
     entries.push({ name: 'keybindings.json', path: keybindingsJson, section: 'global' })
   }
 
   const projectKey = projectPath.replace(/\//g, '-')
-  const projectConfigDir = path.join(claudeDir, 'projects', projectKey)
+  const projectConfigDir = path.join(codevDir, 'projects', projectKey)
 
   const projectSettingsJson = path.join(projectConfigDir, 'settings.json')
   if (fs.existsSync(projectSettingsJson)) {
     entries.push({ name: 'settings.json (project)', path: projectSettingsJson, section: 'project' })
   }
 
-  const projectClaudeMdGlobal = path.join(projectConfigDir, 'CLAUDE.md')
-  if (fs.existsSync(projectClaudeMdGlobal)) {
-    entries.push({ name: 'CLAUDE.md (project config)', path: projectClaudeMdGlobal, section: 'project' })
+  const projectCodevMdGlobal = path.join(projectConfigDir, 'CLAUDE.md')
+  if (fs.existsSync(projectCodevMdGlobal)) {
+    entries.push({ name: 'CLAUDE.md (project config)', path: projectCodevMdGlobal, section: 'project' })
   }
 
   const projectMemDir = path.join(projectConfigDir, 'memory')
   addFiles(projectMemDir, 'project', entries)
 
-  const projectClaudeDir = path.join(projectPath, '.claude')
-  for (const name of safeReaddir(projectClaudeDir)) {
+  const projectCodevDir = path.join(projectPath, '.claude')
+  for (const name of safeReaddir(projectCodevDir)) {
     if (SKIP_DIRS.has(name)) continue
-    const fullPath = path.join(projectClaudeDir, name)
+    const fullPath = path.join(projectCodevDir, name)
     const ext = path.extname(name)
     if (SKIP_EXTS.has(ext)) continue
     try {
@@ -114,55 +114,55 @@ function scanClaudeFiles(projectPath: string): ClaudeFileEntry[] {
     }
   }
 
-  const projectClaudeMd = path.join(projectPath, 'CLAUDE.md')
-  if (fs.existsSync(projectClaudeMd)) {
-    entries.push({ name: 'CLAUDE.md (project root)', path: projectClaudeMd, section: 'project' })
+  const projectCodevMd = path.join(projectPath, 'CLAUDE.md')
+  if (fs.existsSync(projectCodevMd)) {
+    entries.push({ name: 'CLAUDE.md (project root)', path: projectCodevMd, section: 'project' })
   }
 
   return entries
 }
 
-function isAllowedClaudePath(filePath: string, projectPath?: string): boolean {
+function isAllowedCodevPath(filePath: string, projectPath?: string): boolean {
   const resolved = path.resolve(filePath)
-  const claudeDir = path.join(os.homedir(), '.claude')
-  if (resolved.startsWith(claudeDir + path.sep)) return true
+  const codevDir = path.join(os.homedir(), '.claude')
+  if (resolved.startsWith(codevDir + path.sep)) return true
   if (projectPath) {
-    const projectClaudeDir = path.join(path.resolve(projectPath), '.claude')
-    if (resolved.startsWith(projectClaudeDir + path.sep)) return true
+    const projectCodevDir = path.join(path.resolve(projectPath), '.claude')
+    if (resolved.startsWith(projectCodevDir + path.sep)) return true
     if (resolved === path.join(path.resolve(projectPath), 'CLAUDE.md')) return true
   }
   return false
 }
 
-export function registerClaudeConfigHandlers(): void {
-  safeHandle('claude:home-path', (): string => {
+export function registerCodevConfigHandlers(): void {
+  safeHandle('codev:home-path', (): string => {
     return path.join(os.homedir(), '.claude')
   })
 
-  safeHandle('claude:user-home', (): string => {
+  safeHandle('codev:user-home', (): string => {
     return os.homedir()
   })
 
-  safeHandle('claude:scan-files', (_event, projectPath: string): ClaudeFileEntry[] => {
-    return scanClaudeFiles(projectPath)
+  safeHandle('codev:scan-files', (_event, projectPath: string): CodevFileEntry[] => {
+    return scanCodevFiles(projectPath)
   })
 
-  safeHandle('claude:read-file', (_event, filePath: string, projectPath: string): string => {
+  safeHandle('codev:read-file', (_event, filePath: string, projectPath: string): string => {
     const resolved = path.resolve(filePath)
-    if (!isAllowedClaudePath(resolved, projectPath)) throw new Error('Path not allowed')
+    if (!isAllowedCodevPath(resolved, projectPath)) throw new Error('Path not allowed')
     return fs.readFileSync(resolved, 'utf-8')
   })
 
-  safeHandle('claude:write-file', (_event, filePath: string, content: string, projectPath: string): void => {
+  safeHandle('codev:write-file', (_event, filePath: string, content: string, projectPath: string): void => {
     const resolved = path.resolve(filePath)
-    if (!isAllowedClaudePath(resolved, projectPath)) throw new Error('Path not allowed')
+    if (!isAllowedCodevPath(resolved, projectPath)) throw new Error('Path not allowed')
     fs.mkdirSync(path.dirname(resolved), { recursive: true })
     fs.writeFileSync(resolved, content, 'utf-8')
   })
 
-  safeHandle('claude:delete-file', (_event, filePath: string, projectPath: string): void => {
+  safeHandle('codev:delete-file', (_event, filePath: string, projectPath: string): void => {
     const resolved = path.resolve(filePath)
-    if (!isAllowedClaudePath(resolved, projectPath)) throw new Error('Path not allowed')
+    if (!isAllowedCodevPath(resolved, projectPath)) throw new Error('Path not allowed')
     fs.unlinkSync(resolved)
   })
 }

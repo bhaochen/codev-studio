@@ -13,13 +13,13 @@ const api = {
     reorder: (orderedIds: string[]) => ipcRenderer.invoke('projects:reorder', orderedIds)
   },
 
-  claude: {
-    homePath: () => ipcRenderer.invoke('claude:home-path') as Promise<string>,
-    userHome: () => ipcRenderer.invoke('claude:user-home') as Promise<string>,
-    scanFiles: (projectPath: string) => ipcRenderer.invoke('claude:scan-files', projectPath),
-    readFile: (filePath: string, projectPath: string) => ipcRenderer.invoke('claude:read-file', filePath, projectPath),
-    writeFile: (filePath: string, content: string, projectPath: string) => ipcRenderer.invoke('claude:write-file', filePath, content, projectPath),
-    deleteFile: (filePath: string, projectPath: string) => ipcRenderer.invoke('claude:delete-file', filePath, projectPath),
+  codev: {
+    homePath: () => ipcRenderer.invoke('codev:home-path') as Promise<string>,
+    userHome: () => ipcRenderer.invoke('codev:user-home') as Promise<string>,
+    scanFiles: (projectPath: string) => ipcRenderer.invoke('codev:scan-files', projectPath),
+    readFile: (filePath: string, projectPath: string) => ipcRenderer.invoke('codev:read-file', filePath, projectPath),
+    writeFile: (filePath: string, content: string, projectPath: string) => ipcRenderer.invoke('codev:write-file', filePath, content, projectPath),
+    deleteFile: (filePath: string, projectPath: string) => ipcRenderer.invoke('codev:delete-file', filePath, projectPath),
     explainDiff: (
       projectRoot: string,
       source?:
@@ -28,7 +28,7 @@ const api = {
         | { kind: 'range'; from: string; to: string },
       level?: 'functional' | 'technical' | 'deep'
     ) =>
-      ipcRenderer.invoke('claude:explain-diff', { projectRoot, source, level }) as Promise<{
+      ipcRenderer.invoke('codev:explain-diff', { projectRoot, source, level }) as Promise<{
         generatedAt: string
         diffSha: string
         level: 'functional' | 'technical' | 'deep'
@@ -39,7 +39,7 @@ const api = {
         }>
       }>,
     listSessions: (projectPath: string) =>
-      ipcRenderer.invoke('claude-sessions:list', projectPath) as Promise<
+      ipcRenderer.invoke('codev-sessions:list', projectPath) as Promise<
         Array<{
           id: string
           mtime: number

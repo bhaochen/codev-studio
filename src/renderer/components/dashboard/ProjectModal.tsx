@@ -82,7 +82,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps): React.Rea
     setActiveProject(project.id)
   }
 
-  const claudeStatus = (() => {
+  const codevStatus = (() => {
     const llmTabs = projectTabs.filter((t) => t.initialCommand)
     if (llmTabs.length === 0) return 'none'
     if (llmTabs.some((t) => tabStatuses[t.id] === 'busy')) return 'busy'
@@ -105,9 +105,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps): React.Rea
             <span
               className={cn(
                 'inline-block h-2 w-2 shrink-0 rounded-full',
-                claudeStatus === 'busy' && 'animate-pulse bg-amber-400',
-                claudeStatus === 'idle' && 'bg-emerald-400',
-                claudeStatus === 'none' && 'bg-zinc-600'
+                codevStatus === 'busy' && 'animate-pulse bg-amber-400',
+                codevStatus === 'idle' && 'bg-emerald-400',
+                codevStatus === 'none' && 'bg-zinc-600'
               )}
             />
             <span className="text-sm font-medium text-zinc-200">{project.name}</span>

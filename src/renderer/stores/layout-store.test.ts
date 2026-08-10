@@ -128,9 +128,9 @@ describe('layout-store', () => {
   })
 
   describe('llm provider', () => {
-    it('defaults to claude', () => {
-      expect(useLayoutStore.getState().llmProviderId).toBe('claude')
-      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('claude')
+    it('defaults to codev', () => {
+      expect(useLayoutStore.getState().llmProviderId).toBe('codev')
+      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('codev')
     })
 
     it('resolves the command for the selected provider', () => {
@@ -140,15 +140,15 @@ describe('layout-store', () => {
 
     it('resolves the custom command when custom is selected', () => {
       useLayoutStore.getState().setLlmProviderId('custom')
-      useLayoutStore.getState().setLlmCustomCommand('  claude --resume  ')
-      expect(useLayoutStore.getState().llmCustomCommand).toBe('claude --resume')
-      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('claude --resume')
+      useLayoutStore.getState().setLlmCustomCommand('  codev --resume  ')
+      expect(useLayoutStore.getState().llmCustomCommand).toBe('codev --resume')
+      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('codev --resume')
     })
 
-    it('falls back to claude when custom is selected but blank', () => {
+    it('falls back to codev when custom is selected but blank', () => {
       useLayoutStore.getState().setLlmProviderId('custom')
       useLayoutStore.getState().setLlmCustomCommand('   ')
-      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('claude')
+      expect(useLayoutStore.getState().getLlmStartupCommand()).toBe('codev')
     })
   })
 
@@ -157,16 +157,24 @@ describe('layout-store', () => {
       localStorage.clear()
     })
 
-    it('defaults to claude when nothing is persisted', async () => {
+    it('defaults to codev when nothing is persisted', async () => {
       const { useLayoutStore: store } = await importFresh()
-      expect(store.getState().llmProviderId).toBe('claude')
+      expect(store.getState().llmProviderId).toBe('codev')
     })
 
-    it('migrates a legacy claude command', async () => {
+    it('migrates a legacy codev command', async () => {
+      seedPersisted({ llmStartupCommand: 'codev' })
+      const { useLayoutStore: store } = await importFresh()
+      expect(store.getState().llmProviderId).toBe('codev')
+      expect(store.getState().llmCustomCommand).toBe('')
+    })
+
+    it('migrates a legacy claude command to the codev provider', async () => {
       seedPersisted({ llmStartupCommand: 'claude' })
       const { useLayoutStore: store } = await importFresh()
-      expect(store.getState().llmProviderId).toBe('claude')
+      expect(store.getState().llmProviderId).toBe('codev')
       expect(store.getState().llmCustomCommand).toBe('')
+      expect(store.getState().getLlmStartupCommand()).toBe('codev')
     })
 
     it('migrates a legacy codex command', async () => {
@@ -183,11 +191,11 @@ describe('layout-store', () => {
       expect(store.getState().getLlmStartupCommand()).toBe('gemini --yolo')
     })
 
-    it('migrates a flagged claude command to custom so flags survive', async () => {
-      seedPersisted({ llmStartupCommand: 'claude --resume' })
+    it('migrates a flagged codev command to custom so flags survive', async () => {
+      seedPersisted({ llmStartupCommand: 'codev --resume' })
       const { useLayoutStore: store } = await importFresh()
       expect(store.getState().llmProviderId).toBe('custom')
-      expect(store.getState().getLlmStartupCommand()).toBe('claude --resume')
+      expect(store.getState().getLlmStartupCommand()).toBe('codev --resume')
     })
 
     it('keeps unrelated persisted layout state during migration', async () => {
@@ -206,9 +214,9 @@ describe('layout-store', () => {
     })
 
     it('prefers an explicit provider id over a stale legacy command', async () => {
-      seedPersisted({ llmProviderId: 'claude', llmStartupCommand: 'codex' }, 1)
+      seedPersisted({ llmProviderId: 'codev', llmStartupCommand: 'codex' }, 1)
       const { useLayoutStore: store } = await importFresh()
-      expect(store.getState().llmProviderId).toBe('claude')
+      expect(store.getState().llmProviderId).toBe('codev')
     })
 
     it('leaves already-migrated state untouched', async () => {
@@ -217,10 +225,10 @@ describe('layout-store', () => {
       expect(store.getState().llmProviderId).toBe('codex')
     })
 
-    it('falls back to claude for a corrupt persisted provider id', async () => {
+    it('falls back to codev for a corrupt persisted provider id', async () => {
       seedPersisted({ llmProviderId: 'nonsense' }, 1)
       const { useLayoutStore: store } = await importFresh()
-      expect(store.getState().llmProviderId).toBe('claude')
+      expect(store.getState().llmProviderId).toBe('codev')
     })
   })
 })

@@ -143,7 +143,7 @@ export function SkillsPanel({ projectId, scope = 'all' }: SkillsPanelProps): Rea
     if (scope === 'project' && !projectPath) return
     const key = `${scope}:${result.source}:${result.skillId}`
     setBusyKey(key)
-    setOutput((prev) => prev + `\n$ npx skills add ${result.source} -s ${result.skillId} -a claude-code${scope === 'global' ? ' -g' : ''}\n`)
+    setOutput((prev) => prev + `\n$ npx skills add ${result.source} -s ${result.skillId} -a codev${scope === 'global' ? ' -g' : ''}\n`)
     try {
       const { code } = await window.api.skills.install(result.source, result.skillId, scope, projectPath)
       setOutput((prev) => prev + `\n[exit ${code}]\n`)

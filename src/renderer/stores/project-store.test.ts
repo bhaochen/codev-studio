@@ -77,7 +77,7 @@ describe('project-store', () => {
     it('kills tabs for the project, removes it, and clears active when matching', async () => {
       const p = project('a', 'A')
       useProjectStore.setState({ projects: [p], activeProjectId: 'a', dashboardActive: false })
-      useTerminalStore.getState().createTab('a', '/A', 'claude')
+      useTerminalStore.getState().createTab('a', '/A', 'codev')
       useDevTerminalStore.getState().createTab('a', '/A')
       vi.mocked(window.api.projects.list).mockResolvedValue([])
       await useProjectStore.getState().removeProject('a')

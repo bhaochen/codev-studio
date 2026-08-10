@@ -261,8 +261,8 @@ describe('editor-store', () => {
   describe('setCenterTab / setActiveFile', () => {
     it('updates centerTab without touching open files', async () => {
       await useEditorStore.getState().openFile('p1', '/p/a.ts', 'a.ts')
-      useEditorStore.getState().setCenterTab('p1', 'claude')
-      expect(useEditorStore.getState().centerTabPerProject.p1).toBe('claude')
+      useEditorStore.getState().setCenterTab('p1', 'codev')
+      expect(useEditorStore.getState().centerTabPerProject.p1).toBe('codev')
       expect(useEditorStore.getState().statePerProject.p1.openFiles).toHaveLength(1)
     })
 

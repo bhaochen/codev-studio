@@ -1,7 +1,7 @@
 {
   "name": "vbcdr",
   "version": "1.1.91",
-  "description": "Desktop vibe coding environment for Claude Code developers",
+  "description": "Desktop vibe coding environment for Codev developers",
   "author": {
     "name": "jo vinkenroye",
     "email": "jov2all@gmail.com"
@@ -138,5 +138,14 @@
   },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"
+  },
+  "allowScripts": {
+    "electron@34.5.8": true,
+    "node-pty@1.1.0": true,
+    "esbuild@0.25.12": true,
+    "electron-winstaller@5.4.0": true
+  },
+  "overrides": {
+    "yauzl": "3.4.0"
   }
 }

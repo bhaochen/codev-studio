@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { PermissionMode } from '@/lib/claude-permissions'
+import type { PermissionMode } from '@/lib/codev-permissions'
 import { PROFILE_LIBRARY, getProfile, type PermissionProfile } from '@/config/permission-profile-library'
 
 export interface PermissionPreset {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { parseClaudeJsonEnvelope } from './claude-explain'
+import { parseCodevJsonEnvelope } from './codev-explain'
 
-describe('parseClaudeJsonEnvelope', () => {
-  it('extracts structured_output from a real claude -p result event', () => {
+describe('parseCodevJsonEnvelope', () => {
+  it('extracts structured_output from a real codev -p result event', () => {
     const real = JSON.stringify([
       { type: 'system', subtype: 'init' },
       { type: 'assistant', message: { content: [{ type: 'tool_use' }] } },
@@ -24,7 +24,7 @@ describe('parseClaudeJsonEnvelope', () => {
         }
       }
     ])
-    const out = parseClaudeJsonEnvelope(real)
+    const out = parseCodevJsonEnvelope(real)
     expect(out.files).toHaveLength(1)
     expect(out.files[0].path).toBe('src/foo.ts')
     expect(out.files[0].comments[0].line).toBe(2)
@@ -42,23 +42,23 @@ describe('parseClaudeJsonEnvelope', () => {
         })
       }
     ])
-    const out = parseClaudeJsonEnvelope(stringResult)
+    const out = parseCodevJsonEnvelope(stringResult)
     expect(out.files[0].path).toBe('x.ts')
   })
 
-  it('throws when claude reports an error', () => {
+  it('throws when codev reports an error', () => {
     const errorEnv = JSON.stringify([
       { type: 'result', is_error: true, result: 'rate limited' }
     ])
-    expect(() => parseClaudeJsonEnvelope(errorEnv)).toThrow(/rate limited/)
+    expect(() => parseCodevJsonEnvelope(errorEnv)).toThrow(/rate limited/)
   })
 
   it('throws on empty output', () => {
-    expect(() => parseClaudeJsonEnvelope('')).toThrow(/empty/)
+    expect(() => parseCodevJsonEnvelope('')).toThrow(/empty/)
   })
 
   it('throws on malformed JSON', () => {
-    expect(() => parseClaudeJsonEnvelope('not json')).toThrow(/valid JSON/)
+    expect(() => parseCodevJsonEnvelope('not json')).toThrow(/valid JSON/)
   })
 
   it('handles a single object envelope (legacy non-array form)', () => {
@@ -69,7 +69,7 @@ describe('parseClaudeJsonEnvelope', () => {
         files: [{ path: 'a.ts', comments: [] }]
       }
     })
-    const out = parseClaudeJsonEnvelope(single)
+    const out = parseCodevJsonEnvelope(single)
     expect(out.files[0].path).toBe('a.ts')
   })
 })

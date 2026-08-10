@@ -16,7 +16,7 @@ const llmTab = (id: string, projectId: string) => ({
   title: id,
   projectId,
   cwd: '/p',
-  initialCommand: 'claude'
+  initialCommand: 'codev'
 })
 
 const shellTab = (id: string, projectId: string) => ({

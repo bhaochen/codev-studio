@@ -328,11 +328,11 @@ export function CommandPalette(): React.ReactElement | null {
         ...(capabilitiesFor(llmProviderId).configFiles
           ? [
               {
-                id: 'action:center-claude',
-                label: 'Show Claude config',
+                id: 'action:center-codev',
+                label: 'Show Codev config',
                 group: 'Editor',
                 icon: <Settings size={14} />,
-                run: (): void => useEditorStore.getState().setCenterTab(activeProjectId, 'claude')
+                run: (): void => useEditorStore.getState().setCenterTab(activeProjectId, 'codev')
               }
             ]
           : [])

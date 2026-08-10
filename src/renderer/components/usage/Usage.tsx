@@ -152,7 +152,7 @@ export function Usage(): React.ReactElement {
     return map
   }, [projects, archivedProjects])
 
-  const claudeTabs = useMemo(() => {
+  const codevTabs = useMemo(() => {
     return tabs
       .filter((t) => !!t.initialCommand)
       .map((t) => ({
@@ -166,8 +166,8 @@ export function Usage(): React.ReactElement {
       .sort((a, b) => b.tokens - a.tokens)
   }, [tabs, tabStatuses, tokenUsagePerTab, projectNameById, llmLabel])
 
-  const liveTotalTokens = useMemo(() => claudeTabs.reduce((acc, t) => acc + t.tokens, 0), [claudeTabs])
-  const busyCount = useMemo(() => claudeTabs.filter((t) => t.isBusy).length, [claudeTabs])
+  const liveTotalTokens = useMemo(() => codevTabs.reduce((acc, t) => acc + t.tokens, 0), [codevTabs])
+  const busyCount = useMemo(() => codevTabs.filter((t) => t.isBusy).length, [codevTabs])
 
   const rangeStartIso = useMemo(() => {
     const ms = rangeStartMs(range)
@@ -201,8 +201,8 @@ export function Usage(): React.ReactElement {
       <div className="mx-auto max-w-6xl space-y-6">
         {!llmCapabilities.usage && (
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-xs text-zinc-400">
-            Live token tracking reads Claude Code&apos;s transcripts, so it is paused for the
-            selected assistant. Historical totals below still reflect earlier Claude sessions.
+            Live token tracking reads Codev&apos;s transcripts, so it is paused for the
+            selected assistant. Historical totals below still reflect earlier Codev sessions.
           </div>
         )}
         <div className="flex flex-wrap items-center gap-3">
@@ -223,7 +223,7 @@ export function Usage(): React.ReactElement {
         {llmCapabilities.usage && (
         <Section title="Live">
           <div className="grid grid-cols-4 gap-3">
-            <Kpi icon={<Layers size={14} />} label="Active sessions" value={String(claudeTabs.length)} />
+            <Kpi icon={<Layers size={14} />} label="Active sessions" value={String(codevTabs.length)} />
             <Kpi icon={<Activity size={14} />} label="Currently working" value={String(busyCount)} />
             <Kpi icon={<Cpu size={14} />} label="Live tokens" value={formatTokens(liveTotalTokens)} />
             <Kpi
@@ -234,7 +234,7 @@ export function Usage(): React.ReactElement {
             />
           </div>
 
-          {claudeTabs.length === 0 ? (
+          {codevTabs.length === 0 ? (
             <div className="rounded-lg border border-dashed border-zinc-800 p-12 text-center">
               <Gauge size={28} className="mx-auto text-zinc-700" />
               <div className="mt-3 text-sm text-zinc-400">No active {llmLabel} sessions</div>
@@ -244,7 +244,7 @@ export function Usage(): React.ReactElement {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {claudeTabs.map((t) => (
+              {codevTabs.map((t) => (
                 <TabRow
                   key={t.id}
                   tabId={t.id}

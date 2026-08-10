@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import Editor, { type Monaco } from '@monaco-editor/react'
-import { useClaudeStore } from '@/stores/claude-store'
+import { useCodevStore } from '@/stores/codev-store'
 import { useThemeStore } from '@/stores/theme-store'
 import { registerMonacoThemes, MONACO_THEME_NAME } from '@/config/monaco-theme-registry'
 import { MonacoErrorBoundary } from '@/components/editor/MonacoErrorBoundary'
@@ -11,10 +11,10 @@ function handleBeforeMount(monaco: Monaco): void {
   registerMonacoThemes(monaco)
 }
 
-export function ClaudeEditor({ projectId }: { projectId: string }): React.ReactElement {
-  const activeFilePath = useClaudeStore((s) => s.activeFilePerProject[projectId] ?? null)
-  const content = useClaudeStore((s) => (activeFilePath ? s.contentCache[activeFilePath] : undefined))
-  const { saveFile } = useClaudeStore()
+export function CodevEditor({ projectId }: { projectId: string }): React.ReactElement {
+  const activeFilePath = useCodevStore((s) => s.activeFilePerProject[projectId] ?? null)
+  const content = useCodevStore((s) => (activeFilePath ? s.contentCache[activeFilePath] : undefined))
+  const { saveFile } = useCodevStore()
   const getFullThemeId = useThemeStore((s) => s.getFullThemeId)
   const [showSaved, setShowSaved] = useState(false)
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -32,7 +32,7 @@ export function ClaudeEditor({ projectId }: { projectId: string }): React.ReactE
 
   const handleMount = (editorInstance: editor.IStandaloneCodeEditor): void => {
     editorInstance.addAction({
-      id: 'claude-save',
+      id: 'codev-save',
       label: 'Save',
       keybindings: [2048 | 49],
       run: async () => {
