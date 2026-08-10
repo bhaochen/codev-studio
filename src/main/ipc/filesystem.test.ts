@@ -6,13 +6,26 @@ import { invoke, makeIpcMainMock, makeIpcRegistry, type IpcRegistry } from './ip
 
 let projectRoot = ''
 
-class FakeStore {
-  get(_key: 'projects'): Array<{ id: string; name: string; path: string; lastOpened: number }> {
-    return [{ id: 'p1', name: 'p', path: projectRoot, lastOpened: 0 }]
-  }
-}
+const projectRootsState: { paths: string[] } = { paths: [] }
 
-vi.mock('electron-store', () => ({ default: FakeStore }))
+vi.mock('@main/services/project-roots', () => {
+  return {
+    registerProjectRoots: (paths: string[]) => {
+      projectRootsState.paths = [...paths]
+    },
+    getProjectRoots: () => projectRootsState.paths,
+    isWithinProjectRoot: (filePath: string) => {
+      // Minimal implementation that mirrors the real module for tests.
+      const resolved = require('path').resolve(filePath)
+      return projectRootsState.paths.some(
+        (root) => resolved === root || resolved.startsWith(root + require('path').sep)
+      )
+    },
+    __resetProjectRoots: () => {
+      projectRootsState.paths = []
+    }
+  }
+})
 
 const readTree = vi.fn(() => ({ name: 'p', path: '/p', isDirectory: true, children: [] }))
 const startWatching = vi.fn()
@@ -41,6 +54,7 @@ let registry: IpcRegistry
 
 beforeEach(async () => {
   projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'fs-ipc-'))
+  projectRootsState.paths = [projectRoot]
   vi.resetModules()
   registry = makeIpcRegistry()
   vi.doMock('electron', () => ({

@@ -2,14 +2,12 @@ import fs from 'fs'
 import fsp from 'fs/promises'
 import path from 'path'
 import { BrowserWindow, clipboard, dialog, shell } from 'electron'
-import Store from 'electron-store'
 import { readTree, readFileContents, startWatching, stopWatching } from '@main/services/file-watcher'
 import type { FileReadResult } from '@main/services/file-watcher'
 import { GitignoreMatcher, createLimiter } from '@main/services/fs-scan-utils'
-import type { FileNode, Project, SearchResult } from '@main/models/types'
+import type { FileNode, SearchResult } from '@main/models/types'
 import { safeHandle } from '@main/ipc/safe-handle'
-
-const store = new Store<{ projects: Project[] }>({ defaults: { projects: [] } })
+import { isWithinProjectRoot } from '@main/services/project-roots'
 
 const ALWAYS_IGNORE = new Set(['.git', 'node_modules', '.DS_Store'])
 const BINARY_EXTS = new Set([
@@ -19,12 +17,6 @@ const BINARY_EXTS = new Set([
   'zip', 'tar', 'gz',
   'mp3', 'mp4', 'mov', 'avi', 'wav'
 ])
-
-function isWithinProjectRoot(filePath: string): boolean {
-  const resolved = path.resolve(filePath)
-  const projects = store.get('projects')
-  return projects.some((p) => resolved.startsWith(p.path + path.sep) || resolved === p.path)
-}
 
 function normalizeExclude(entry: string): string {
   return entry.replace(/^\/+|\/+$/g, '').replace(/\\/g, '/').trim()

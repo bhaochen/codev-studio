@@ -8,6 +8,11 @@ import { purgeProjectActivity } from '@main/services/activity-service'
 import { purgeProjectTokenUsage } from '@main/services/token-usage-service'
 import { unregisterProject } from '@main/services/git-fetch-service'
 import { unwatchRefs } from '@main/services/git-refs-watcher'
+import { registerProjectRoots } from '@main/services/project-roots'
+
+function syncProjectRoots(projects: Project[]): void {
+  registerProjectRoots(projects.map((p) => p.path))
+}
 
 export interface ArchivedProject {
   id: string
@@ -22,7 +27,11 @@ const store = new Store<{ projects: Project[]; projectArchive: ArchivedProject[]
 
 export function registerProjectHandlers(): void {
   safeHandle('projects:list', (): Project[] => {
-    return store.get('projects')
+    const projects = store.get('projects')
+    // Re-broadcast on every list call so the in-process project-roots cache
+    // is repopulated after a restart (the cache is in-memory only).
+    syncProjectRoots(projects)
+    return projects
   })
 
   safeHandle('projects:add', async (event): Promise<Project | null> => {
@@ -53,6 +62,7 @@ export function registerProjectHandlers(): void {
 
     projects.push(project)
     store.set('projects', projects)
+    syncProjectRoots(projects)
     if (archived) {
       store.set('projectArchive', archive.filter((a) => a.id !== archived.id))
     }
@@ -64,6 +74,7 @@ export function registerProjectHandlers(): void {
     const removed = projects.find((p) => p.id === id)
     const filtered = projects.filter((p) => p.id !== id)
     store.set('projects', filtered)
+    syncProjectRoots(filtered)
     if (removed) {
       const archive = store.get('projectArchive').filter((a) => a.id !== id)
       archive.push({ id: removed.id, name: removed.name, path: removed.path, archivedAt: Date.now() })
@@ -97,6 +108,7 @@ export function registerProjectHandlers(): void {
     }
     projects.push(project)
     store.set('projects', projects)
+    syncProjectRoots(projects)
     store.set('projectArchive', archive.filter((a) => a.id !== id))
     return project
   })
@@ -122,6 +134,7 @@ export function registerProjectHandlers(): void {
     }
     for (const remaining of byId.values()) reordered.push(remaining)
     store.set('projects', reordered)
+    syncProjectRoots(reordered)
     return true
   })
 }
