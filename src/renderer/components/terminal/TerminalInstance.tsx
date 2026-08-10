@@ -141,8 +141,12 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
       const baseTheme = getTerminalTheme(useThemeStore.getState().getTerminalThemeId())
       const terminal = new Terminal({
         cursorBlink: true,
-        fontSize: 13,
-        fontFamily: 'Menlo, Monaco, Courier New, monospace',
+        fontSize: 14,
+        fontFamily: '"JetBrains Mono", "DejaVu Sans Mono", "Noto Sans Mono", monospace',
+        fontWeight: 400,
+        fontWeightBold: 700,
+        lineHeight: 1.0,
+        letterSpacing: 0,
         cols: 80,
         rows: 24,
         scrollback: 2000,
