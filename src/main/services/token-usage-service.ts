@@ -164,9 +164,12 @@ function readEvents(sinceMs: number | null): TokenEvent[] {
 }
 
 function formatDate(d: Date): string {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
+  // Use UTC components so daily aggregation stays stable across timezones.
+  // Local-time formatting would bucket events into different days for users
+  // in different zones, which is surprising for a usage metric.
+  const y = d.getUTCFullYear()
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(d.getUTCDate()).padStart(2, '0')
   return `${y}-${m}-${day}`
 }
 
