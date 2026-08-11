@@ -1,4 +1,4 @@
-# Codev Studio — the first AIDE
+# Codev Studio: Co-Dev in IDE
 
 [![Build](https://github.com/jestersimpps/codev-studio/actions/workflows/build.yml/badge.svg)](https://github.com/jestersimpps/codev-studio/actions/workflows/build.yml)
 
