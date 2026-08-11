@@ -216,9 +216,16 @@ export function killAll(): void {
 }
 
 export function killOrphanedPtys(): void {
+  // Avoid `-e` and `-x` together: procps-ng 4.x refuses the combination with
+  // "must set personality to get -x option" unless the syscall is permitted.
+  // We don't need `-x` here — orphaned PTYs are owned by our own user.
+  let output: string
   try {
-    const output = execSync('ps eww -ax -o pid,ppid,command', { encoding: 'utf-8' })
-    for (const line of output.split('\n')) {
+    output = execSync('ps -eo pid,ppid,args', { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] })
+  } catch {
+    return
+  }
+  for (const line of output.split('\n')) {
       if (!line.includes('TERM_PROGRAM=codev-studio')) continue
       const parts = line.trim().split(/\s+/)
       const pid = parseInt(parts[0], 10)
@@ -227,5 +234,4 @@ export function killOrphanedPtys(): void {
         try { process.kill(pid, 'SIGTERM') } catch { /* already dead */ }
       }
     }
-  } catch { /* grep returns non-zero when no matches */ }
 }

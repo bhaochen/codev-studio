@@ -243,7 +243,7 @@ describe('killOrphanedPtys', () => {
     osState.platform = 'linux'
     process.env.PATH = '/usr/local/bin'
     execState.responses.set(
-      'ps eww -ax -o pid,ppid,command',
+      'ps -eo pid,ppid,args',
       [
         '  PID  PPID COMMAND',
         '  100   500 unrelated process',
@@ -266,7 +266,7 @@ describe('killOrphanedPtys', () => {
   it('swallows errors from the ps command', async () => {
     osState.platform = 'linux'
     process.env.PATH = '/usr/local/bin'
-    execState.responses.set('ps eww -ax -o pid,ppid,command', () => {
+    execState.responses.set('ps -eo pid,ppid,args', () => {
       throw new Error('ps failed')
     })
 
@@ -278,7 +278,7 @@ describe('killOrphanedPtys', () => {
     osState.platform = 'linux'
     process.env.PATH = '/usr/local/bin'
     execState.responses.set(
-      'ps eww -ax -o pid,ppid,command',
+      'ps -eo pid,ppid,args',
       '  200     1 /bin/zsh TERM_PROGRAM=codev-studio'
     )
     const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => {
