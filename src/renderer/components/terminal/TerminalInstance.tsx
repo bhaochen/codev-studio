@@ -142,7 +142,7 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
       const terminal = new Terminal({
         cursorBlink: true,
         fontSize: 14,
-        fontFamily: '"JetBrains Mono", "DejaVu Sans Mono", "Noto Sans Mono", monospace',
+        fontFamily: '"JetBrainsMono Nerd Font", "JetBrainsMono NF", "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "FiraCode Nerd Font", "JetBrains Mono", "DejaVu Sans Mono", "Noto Sans Mono", monospace',
         fontWeight: 400,
         fontWeightBold: 700,
         lineHeight: 1.0,
