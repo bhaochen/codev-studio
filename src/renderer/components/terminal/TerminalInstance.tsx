@@ -350,14 +350,6 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
 
         const textarea = terminal.textarea
         if (textarea) {
-          // Clear the textarea after every IME composition so the browser's
-          // follow-up input event sees an empty value and xterm does not
-          // re-emit the composed text into onData a second time.
-          textarea.addEventListener('compositionend', () => {
-            window.requestAnimationFrame(() => {
-              if (textarea.value !== '') textarea.value = ''
-            })
-          })
           const onFocus = (): void => {
             useTerminalStore.getState().setFocusedTabId(tabId)
           }

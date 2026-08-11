@@ -25,6 +25,21 @@ import { stopAutoFetch } from '@main/services/git-fetch-service'
 import { stopAllRefsWatchers } from '@main/services/git-refs-watcher'
 
 app.setName('Codev Studio')
+
+// Enable Linux IME (fcitx5/IBus) on Wayland for the in-app terminal. These
+// must be set before any BrowserWindow is created. The dev script also
+// passes them via the CLI for `npm run dev`; setting them here covers
+// packaged builds where the npm script no longer applies.
+//
+// Users can also drop these flags into ~/.config/electron-flags.conf
+// (one per line) so any Electron-based app on their system picks them up.
+if (process.platform === 'linux') {
+  app.commandLine.appendSwitch('enable-features', 'UseOzonePlatform')
+  app.commandLine.appendSwitch('ozone-platform-hint', 'auto')
+  app.commandLine.appendSwitch('enable-wayland-ime')
+  app.commandLine.appendSwitch('wayland-text-input-version', '3')
+  if (!process.env.GTK_IM_MODULE) process.env.GTK_IM_MODULE = 'fcitx'
+}
 app.setAboutPanelOptions({
   applicationName: 'Codev Studio',
   applicationVersion: app.getVersion(),
