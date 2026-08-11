@@ -28,13 +28,13 @@ export const FONTS = {
 } as const;
 
 export const CONTENT = {
-  APP_NAME: "vbcdr",
+  APP_NAME: "Codev Studio",
   TAGLINE: "An AIDE for developers who vibe",
   DESCRIPTION: "Desktop vibe coding environment for Codev developers",
   PHILOSOPHY_LINE_1: "Terminals and browser previews take the main stage",
   PHILOSOPHY_LINE_2: "The editor is intentionally secondary",
   PROBLEM: "Traditional IDEs weren't built for AI agents",
-  GITHUB_URL: "github.com/jestersimpps/vbcdr-electron",
+  GITHUB_URL: "github.com/jestersimpps/codev-studio",
   FEATURES: [
     {
       title: "Terminal-First Design",

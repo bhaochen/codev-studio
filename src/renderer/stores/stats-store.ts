@@ -37,6 +37,6 @@ export const useStatsStore = create<StatsStore>()(
       setIdleMinutes: (idleMinutes) => set({ idleMinutes }),
       setMinSessionMinutes: (minSessionMinutes) => set({ minSessionMinutes })
     }),
-    { name: 'vbcdr-stats' }
+    { name: 'codev-studio-stats' }
   )
 )

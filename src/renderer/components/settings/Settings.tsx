@@ -19,7 +19,7 @@ const TABS: { id: SettingsTab; label: string; icon: LucideIcon }[] = [
   { id: 'permissions', label: 'Permissions', icon: Shield }
 ]
 
-const TAB_STORAGE_KEY = 'vbcdr-settings-tab'
+const TAB_STORAGE_KEY = 'codev-studio-settings-tab'
 
 function loadInitialTab(): SettingsTab {
   try {

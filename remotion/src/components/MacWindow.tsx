@@ -10,7 +10,7 @@ interface MacWindowProps {
 
 export const MacWindow: React.FC<MacWindowProps> = ({
   children,
-  title = "vbcdr",
+  title = "Codev Studio",
   width = 1400,
   style,
 }) => {

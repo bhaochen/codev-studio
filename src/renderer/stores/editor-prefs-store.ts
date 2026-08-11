@@ -60,7 +60,7 @@ export const useEditorPrefsStore = create<EditorPrefsState>()(
       setDefaultDiffView: (mode: DiffViewMode) => set({ defaultDiffView: mode })
     }),
     {
-      name: 'vbcdr-editor-prefs',
+      name: 'codev-studio-editor-prefs',
       partialize: (state) => ({
         minimapEnabled: state.minimapEnabled,
         autosaveEnabled: state.autosaveEnabled,

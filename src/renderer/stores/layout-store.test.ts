@@ -24,7 +24,7 @@ async function importFresh(): Promise<typeof import('./layout-store')> {
 
 function seedPersisted(state: Record<string, unknown>, version?: number): void {
   localStorage.setItem(
-    'vbcdr-layout',
+    'codev-studio-layout',
     JSON.stringify(version === undefined ? { state } : { state, version })
   )
 }
@@ -206,7 +206,7 @@ describe('layout-store', () => {
 
     it('migrates a versionless payload, as written by pre-migration builds', async () => {
       localStorage.setItem(
-        'vbcdr-layout',
+        'codev-studio-layout',
         JSON.stringify({ state: { llmStartupCommand: 'codex' } })
       )
       const { useLayoutStore: store } = await importFresh()

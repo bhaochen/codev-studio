@@ -19,7 +19,7 @@ export interface StashedRules {
 
 export interface CodevSettings {
   permissions?: CodevPermissionsBlock
-  _vbcdrStashedRules?: StashedRules
+  _codevStudioStashedRules?: StashedRules
   [key: string]: unknown
 }
 
@@ -101,7 +101,7 @@ export interface PresetLike {
 
 export function applyPreset(settings: CodevSettings, preset: PresetLike): CodevSettings {
   const next: CodevSettings = { ...settings }
-  delete next._vbcdrStashedRules
+  delete next._codevStudioStashedRules
   const permissions: CodevPermissionsBlock = { ...(next.permissions ?? {}) }
   if (preset.mode === 'default') delete permissions.defaultMode
   else permissions.defaultMode = preset.mode

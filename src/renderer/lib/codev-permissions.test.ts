@@ -179,10 +179,10 @@ describe('applyPreset', () => {
   it('clears prior stashed rules', () => {
     const stashed: CodevSettings = {
       permissions: { defaultMode: 'plan' },
-      _vbcdrStashedRules: { allow: ['X'] }
+      _codevStudioStashedRules: { allow: ['X'] }
     }
     const after = applyPreset(stashed, strict)
-    expect(after._vbcdrStashedRules).toBeUndefined()
+    expect(after._codevStudioStashedRules).toBeUndefined()
   })
 })
 

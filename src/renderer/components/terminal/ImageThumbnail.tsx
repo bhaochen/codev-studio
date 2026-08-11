@@ -16,7 +16,7 @@ export function ImageThumbnail({ src, onDismiss, onUse }: ImageThumbnailProps): 
         border: '1px solid rgba(255,255,255,0.15)',
         boxShadow: '0 4px 14px rgba(0,0,0,0.45)',
         background: '#09090b',
-        animation: 'vbcdr-thumb-fade 220ms ease forwards',
+        animation: 'codev-studio-thumb-fade 220ms ease forwards',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column'

@@ -132,7 +132,7 @@ describe('auto-updater', () => {
       expect(showMessageBox).toHaveBeenCalledWith(expect.objectContaining({
         type: 'info',
         title: 'No Updates',
-        detail: 'vbcdr v1.2.3'
+        detail: 'Codev Studio v1.2.3'
       }))
     })
 

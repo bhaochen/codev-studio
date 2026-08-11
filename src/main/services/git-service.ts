@@ -465,7 +465,7 @@ export async function checkoutBranch(cwd: string, branchName: string): Promise<G
   let stashed = false
   try {
     if (await isDirty(cwd)) {
-      await runGit(cwd, ['stash', 'push', '-m', 'vbcdr-auto-stash'])
+      await runGit(cwd, ['stash', 'push', '-m', 'codev-studio-auto-stash'])
       stashed = true
     }
 

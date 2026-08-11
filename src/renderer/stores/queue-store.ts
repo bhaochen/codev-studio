@@ -124,7 +124,7 @@ export const useQueueStore = create<QueueStore>()(
       isPanelOpen: (tabId: string) => get().panelOpenPerTab[tabId] ?? false
     }),
     {
-      name: 'vbcdr-queue',
+      name: 'codev-studio-queue',
       version: 2,
       migrate: (persisted: unknown, version: number) => {
         if (version < 2 && persisted && typeof persisted === 'object') {

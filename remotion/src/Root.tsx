@@ -1,14 +1,14 @@
 import React from "react";
 import { Composition } from "remotion";
-import { VbcdrDemo } from "./compositions/VbcdrDemo";
+import { CodevStudioDemo } from "./compositions/CodevStudioDemo";
 import { VIDEO, TOTAL_DURATION } from "./lib/constants";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="VbcdrDemo"
-        component={VbcdrDemo}
+        id="CodevStudioDemo"
+        component={CodevStudioDemo}
         durationInFrames={TOTAL_DURATION}
         fps={VIDEO.FPS}
         width={VIDEO.WIDTH}

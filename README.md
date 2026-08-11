@@ -1,6 +1,6 @@
-# vbcdr — the first AIDE
+# Codev Studio — the first AIDE
 
-[![Build](https://github.com/jestersimpps/vbcdr-electron/actions/workflows/build.yml/badge.svg)](https://github.com/jestersimpps/vbcdr-electron/actions/workflows/build.yml)
+[![Build](https://github.com/jestersimpps/codev-studio/actions/workflows/build.yml/badge.svg)](https://github.com/jestersimpps/codev-studio/actions/workflows/build.yml)
 
 **An AIDE for developers who vibe**
 
@@ -13,13 +13,13 @@ A desktop environment built around terminal AI agents, not traditional code edit
 AIDE stands for AI-Integrated Development Environment
 
 Traditional IDEs put the code editor front and center
-vbcdr flips that — terminals take the main stage, because in a vibe coding workflow the AI writes the code and you steer, review, and test
+Codev Studio flips that — terminals take the main stage, because in a vibe coding workflow the AI writes the code and you steer, review, and test
 
 The editor is still there when you need to peek at something, but it's intentionally secondary
 
 ## Screenshots
 
-![vbcdr workspace: dev terminals, Codev terminal, and git tree with working changes](docs/screenshot-hero.png)
+![Codev Studio workspace: dev terminals, Codev terminal, and git tree with working changes](docs/screenshot-hero.png)
 
 ![Sortable projects analytics table with active days and totals](docs/screenshot-projects.png)
 

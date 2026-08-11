@@ -17,7 +17,7 @@ const FEATURE_ACCENTS = [
   GITHUB_DARK.yellow,
 ];
 
-export const VbcdrDemo: React.FC = () => {
+export const CodevStudioDemo: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: GITHUB_DARK.bg950 }}>
       <Series>

@@ -239,7 +239,7 @@ describe('createPty cwd fallback', () => {
 })
 
 describe('killOrphanedPtys', () => {
-  it('sends SIGTERM only to vbcdr ptys whose ppid is 1', async () => {
+  it('sends SIGTERM only to codev-studio ptys whose ppid is 1', async () => {
     osState.platform = 'linux'
     process.env.PATH = '/usr/local/bin'
     execState.responses.set(
@@ -247,8 +247,8 @@ describe('killOrphanedPtys', () => {
       [
         '  PID  PPID COMMAND',
         '  100   500 unrelated process',
-        '  200     1 /bin/zsh -l TERM_PROGRAM=vbcdr',
-        '  300   400 /bin/zsh TERM_PROGRAM=vbcdr',
+        '  200     1 /bin/zsh -l TERM_PROGRAM=codev-studio',
+        '  300   400 /bin/zsh TERM_PROGRAM=codev-studio',
         '  400     1 /bin/sh other'
       ].join('\n')
     )
@@ -279,7 +279,7 @@ describe('killOrphanedPtys', () => {
     process.env.PATH = '/usr/local/bin'
     execState.responses.set(
       'ps eww -ax -o pid,ppid,command',
-      '  200     1 /bin/zsh TERM_PROGRAM=vbcdr'
+      '  200     1 /bin/zsh TERM_PROGRAM=codev-studio'
     )
     const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => {
       throw new Error('ESRCH')

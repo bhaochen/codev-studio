@@ -142,7 +142,7 @@ function TreeNode({
         draggable
         onDragStart={(e) => {
           e.dataTransfer.effectAllowed = 'copy'
-          e.dataTransfer.setData('application/x-vbcdr-file', node.path)
+          e.dataTransfer.setData('application/x-codev-studio-file', node.path)
           e.dataTransfer.setData('text/plain', node.path)
         }}
         className={`flex cursor-pointer items-center gap-1.5 rounded-sm px-1 py-0.5 text-body hover:bg-zinc-800/50 ${ignoredStyle} ${

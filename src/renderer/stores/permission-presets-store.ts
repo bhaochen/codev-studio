@@ -128,7 +128,7 @@ export const usePermissionPresetsStore = create<PermissionPresetsState>()(
       resetAll: () => set({ presets: defaultPresets() })
     }),
     {
-      name: 'vbcdr-permission-presets',
+      name: 'codev-studio-permission-presets',
       version: 2,
       partialize: (state) => ({ presets: state.presets }),
       migrate: (persisted, version) => {

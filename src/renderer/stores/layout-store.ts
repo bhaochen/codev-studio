@@ -137,7 +137,7 @@ export const useLayoutStore = create<LayoutState>()(
       }
     }),
     {
-      name: 'vbcdr-layout',
+      name: 'codev-studio-layout',
       version: 1,
       migrate: (persisted: unknown) => upgradeLegacyProvider(persisted),
       partialize: (state) => ({

@@ -88,7 +88,7 @@ function probeLoginPath(): string | null {
 function shellEnv(): Record<string, string> {
   const env = { ...process.env } as Record<string, string>
   env.TERM = 'xterm-256color'
-  env.TERM_PROGRAM = 'vbcdr'
+  env.TERM_PROGRAM = 'codev-studio'
   if (os.platform() === 'darwin') {
     env.GIT_CONFIG_COUNT = '1'
     env.GIT_CONFIG_KEY_0 = 'credential.helper'
@@ -219,7 +219,7 @@ export function killOrphanedPtys(): void {
   try {
     const output = execSync('ps eww -ax -o pid,ppid,command', { encoding: 'utf-8' })
     for (const line of output.split('\n')) {
-      if (!line.includes('TERM_PROGRAM=vbcdr')) continue
+      if (!line.includes('TERM_PROGRAM=codev-studio')) continue
       const parts = line.trim().split(/\s+/)
       const pid = parseInt(parts[0], 10)
       const ppid = parseInt(parts[1], 10)

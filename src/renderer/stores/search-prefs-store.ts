@@ -44,7 +44,7 @@ export const useSearchPrefsStore = create<SearchPrefsState>()(
       }
     }),
     {
-      name: 'vbcdr-search-prefs',
+      name: 'codev-studio-search-prefs',
       partialize: (state) => ({ excludesPerProject: state.excludesPerProject })
     }
   )

@@ -30,7 +30,7 @@ function readJsonFile(filePath: string): JsonObject {
 }
 
 function writeJsonFileAtomic(filePath: string, data: JsonObject): void {
-  const tmpPath = filePath + '.vbcdr-tmp'
+  const tmpPath = filePath + '.codev-studio-tmp'
   fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8')
   fs.renameSync(tmpPath, filePath)
 }

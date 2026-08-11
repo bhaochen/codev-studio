@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Test script for browser API token optimizations
-# Run this after starting vbcdr app
+# Run this after starting Codev Studio app
 
-API="${VBCDR_API:-http://127.0.0.1:7483}"
+API="${CODEV_STUDIO_API:-http://127.0.0.1:7483}"
 
 echo "Testing Browser API Optimizations"
 echo "=================================="
@@ -25,7 +25,7 @@ echo "First tab ID: $TAB_ID"
 echo ""
 
 if [ "$TAB_ID" = "null" ] || [ -z "$TAB_ID" ]; then
-  echo "No tabs available. Please open a browser tab in vbcdr first."
+  echo "No tabs available. Please open a browser tab in Codev Studio first."
   exit 1
 fi
 

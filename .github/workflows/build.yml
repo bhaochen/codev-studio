@@ -52,7 +52,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vbcdr-${{ matrix.platform }}
+          name: codev-studio-${{ matrix.platform }}
           path: |
             dist/*.dmg
             dist/*.zip

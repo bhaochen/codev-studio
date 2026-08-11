@@ -24,9 +24,9 @@ import { startClipboardWatcher, stopClipboardWatcher } from '@main/services/clip
 import { stopAutoFetch } from '@main/services/git-fetch-service'
 import { stopAllRefsWatchers } from '@main/services/git-refs-watcher'
 
-app.setName('vbcdr')
+app.setName('Codev Studio')
 app.setAboutPanelOptions({
-  applicationName: 'vbcdr',
+  applicationName: 'Codev Studio',
   applicationVersion: app.getVersion(),
   version: '',
   copyright: '© 2026 Jo Vinkenroye',
@@ -50,7 +50,7 @@ app.on('render-process-gone', (_event, webContents, details) => {
     if (mainWindow && !mainWindow.isDestroyed() && webContents === mainWindow.webContents) {
       const choice = dialog.showMessageBoxSync(mainWindow, {
         type: 'error',
-        title: 'vbcdr',
+        title: 'Codev Studio',
         message: 'The window crashed.',
         detail: `Reason: ${details.reason}. Reload to recover?`,
         buttons: ['Reload', 'Quit'],
@@ -145,9 +145,9 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
   const isMac = process.platform === 'darwin'
 
   const appMenu: Electron.MenuItemConstructorOptions = {
-    label: 'vbcdr',
+    label: 'Codev Studio',
     submenu: [
-      { role: 'about', label: 'About vbcdr' },
+      { role: 'about', label: 'About Codev Studio' },
       { type: 'separator' },
       {
         label: 'Settings...',
@@ -159,11 +159,11 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
         click: () => checkForUpdatesInteractive()
       },
       { type: 'separator' },
-      { role: 'hide', label: 'Hide vbcdr' },
+      { role: 'hide', label: 'Hide Codev Studio' },
       { role: 'hideOthers' },
       { role: 'unhide' },
       { type: 'separator' },
-      { role: 'quit', label: 'Quit vbcdr' }
+      { role: 'quit', label: 'Quit Codev Studio' }
     ]
   }
 

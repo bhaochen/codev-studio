@@ -320,7 +320,7 @@ export function DevServersPage(): React.ReactElement {
                                   onClick={() => {
                                     const open = window.api.devServers.open
                                     if (typeof open !== 'function') {
-                                      setError('Restart vbcdr — preload script is out of date.')
+                                      setError('Restart Codev Studio — preload script is out of date.')
                                       return
                                     }
                                     open(server.port).catch((e) => setError(`Open failed: ${e}`))

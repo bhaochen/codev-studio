@@ -494,8 +494,8 @@ export function DiffPanel({ projectId, cwd }: DiffPanelProps): React.ReactElemen
       const badgeNumber = globalIndex >= 0 ? globalIndex + 1 : i + 1
       const node = document.createElement('div')
       const isHighlighted = highlightedCommentKey === key
-      node.className = `vbcdr-explain-bubble${isHighlighted ? ' vbcdr-explain-bubble--active' : ''}`
-      node.innerHTML = `<div class="vbcdr-explain-bubble__inner"><span class="vbcdr-explain-bubble__badge">${badgeNumber}</span><span class="vbcdr-explain-bubble__text">${escapeHtml(c.text)}</span></div>`
+      node.className = `codev-studio-explain-bubble${isHighlighted ? ' codev-studio-explain-bubble--active' : ''}`
+      node.innerHTML = `<div class="codev-studio-explain-bubble__inner"><span class="codev-studio-explain-bubble__badge">${badgeNumber}</span><span class="codev-studio-explain-bubble__text">${escapeHtml(c.text)}</span></div>`
 
       sub.changeViewZones((accessor) => {
         const id = accessor.addZone({
@@ -510,8 +510,8 @@ export function DiffPanel({ projectId, cwd }: DiffPanelProps): React.ReactElemen
         range: { startLineNumber: c.line, startColumn: 1, endLineNumber: c.line, endColumn: 1 },
         options: {
           isWholeLine: true,
-          linesDecorationsClassName: `vbcdr-explain-pin vbcdr-explain-pin-${badgeNumber}${isHighlighted ? ' vbcdr-explain-pin--active' : ''}${tourPlaying && tourIndex === globalIndex ? ' vbcdr-explain-pin--tour' : ''}`,
-          className: tourPlaying && tourIndex === globalIndex ? 'vbcdr-explain-line-tour' : undefined
+          linesDecorationsClassName: `codev-studio-explain-pin codev-studio-explain-pin-${badgeNumber}${isHighlighted ? ' codev-studio-explain-pin--active' : ''}${tourPlaying && tourIndex === globalIndex ? ' codev-studio-explain-pin--tour' : ''}`,
+          className: tourPlaying && tourIndex === globalIndex ? 'codev-studio-explain-line-tour' : undefined
         }
       })
     })

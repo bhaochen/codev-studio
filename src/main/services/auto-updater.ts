@@ -71,7 +71,7 @@ export async function checkForUpdatesInteractive(): Promise<void> {
       type: 'info',
       title: 'No Updates',
       message: 'You\'re on the latest version',
-      detail: `vbcdr v${autoUpdater.currentVersion.version}`
+      detail: `Codev Studio v${autoUpdater.currentVersion.version}`
     })
   }
 }

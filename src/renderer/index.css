@@ -106,7 +106,7 @@ body {
   100% { transform: translateX(300%); }
 }
 
-.vbcdr-explain-bubble {
+.codev-studio-explain-bubble {
   display: flex;
   align-items: stretch;
   padding: 4px 8px 4px 0;
@@ -117,7 +117,7 @@ body {
   pointer-events: auto;
 }
 
-.vbcdr-explain-bubble__inner {
+.codev-studio-explain-bubble__inner {
   display: flex;
   align-items: flex-start;
   gap: 6px;
@@ -129,7 +129,7 @@ body {
   max-width: calc(100% - 80px);
 }
 
-.vbcdr-explain-bubble__badge {
+.codev-studio-explain-bubble__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -147,33 +147,33 @@ body {
   font-feature-settings: 'tnum';
 }
 
-.vbcdr-explain-bubble__text {
+.codev-studio-explain-bubble__text {
   color: #e4e4e7;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-.vbcdr-explain-bubble--active .vbcdr-explain-bubble__inner {
+.codev-studio-explain-bubble--active .codev-studio-explain-bubble__inner {
   background: rgba(59, 130, 246, 0.18);
   border-left-color: rgb(147, 197, 253);
   box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.4);
 }
 
-.vbcdr-explain-bubble--active .vbcdr-explain-bubble__badge {
+.codev-studio-explain-bubble--active .codev-studio-explain-bubble__badge {
   background: rgb(191, 219, 254);
   box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.4);
 }
 
 /* Pin: a numbered circular badge in Monaco's lineDecorationsClassName slot.
    The number itself is rendered via ::before content from the per-number class. */
-.vbcdr-explain-pin {
+.codev-studio-explain-pin {
   position: relative;
   width: 18px !important;
   margin-left: 2px;
   cursor: pointer;
 }
 
-.vbcdr-explain-pin::before {
+.codev-studio-explain-pin::before {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -195,68 +195,68 @@ body {
   pointer-events: none;
 }
 
-.vbcdr-explain-pin--active::before {
+.codev-studio-explain-pin--active::before {
   background: rgb(191, 219, 254);
   box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.55), 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
-.vbcdr-explain-pin--tour::before {
+.codev-studio-explain-pin--tour::before {
   background: rgb(253, 224, 71);
   color: #1a1a05;
-  animation: vbcdr-pin-pulse 1.2s ease-out infinite;
+  animation: codev-studio-pin-pulse 1.2s ease-out infinite;
 }
 
-@keyframes vbcdr-pin-pulse {
+@keyframes codev-studio-pin-pulse {
   0%   { box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7), 0 1px 2px rgba(0, 0, 0, 0.25); }
   70%  { box-shadow: 0 0 0 6px rgba(253, 224, 71, 0),  0 1px 2px rgba(0, 0, 0, 0.25); }
   100% { box-shadow: 0 0 0 0 rgba(253, 224, 71, 0),    0 1px 2px rgba(0, 0, 0, 0.25); }
 }
 
 /* Numeric content per pin index. We support up to 99 comments; rare but cheap. */
-.vbcdr-explain-pin-1::before  { content: '1'; }
-.vbcdr-explain-pin-2::before  { content: '2'; }
-.vbcdr-explain-pin-3::before  { content: '3'; }
-.vbcdr-explain-pin-4::before  { content: '4'; }
-.vbcdr-explain-pin-5::before  { content: '5'; }
-.vbcdr-explain-pin-6::before  { content: '6'; }
-.vbcdr-explain-pin-7::before  { content: '7'; }
-.vbcdr-explain-pin-8::before  { content: '8'; }
-.vbcdr-explain-pin-9::before  { content: '9'; }
-.vbcdr-explain-pin-10::before { content: '10'; }
-.vbcdr-explain-pin-11::before { content: '11'; }
-.vbcdr-explain-pin-12::before { content: '12'; }
-.vbcdr-explain-pin-13::before { content: '13'; }
-.vbcdr-explain-pin-14::before { content: '14'; }
-.vbcdr-explain-pin-15::before { content: '15'; }
-.vbcdr-explain-pin-16::before { content: '16'; }
-.vbcdr-explain-pin-17::before { content: '17'; }
-.vbcdr-explain-pin-18::before { content: '18'; }
-.vbcdr-explain-pin-19::before { content: '19'; }
-.vbcdr-explain-pin-20::before { content: '20'; }
-.vbcdr-explain-pin-21::before { content: '21'; }
-.vbcdr-explain-pin-22::before { content: '22'; }
-.vbcdr-explain-pin-23::before { content: '23'; }
-.vbcdr-explain-pin-24::before { content: '24'; }
-.vbcdr-explain-pin-25::before { content: '25'; }
-.vbcdr-explain-pin-26::before { content: '26'; }
-.vbcdr-explain-pin-27::before { content: '27'; }
-.vbcdr-explain-pin-28::before { content: '28'; }
-.vbcdr-explain-pin-29::before { content: '29'; }
-.vbcdr-explain-pin-30::before { content: '30'; }
+.codev-studio-explain-pin-1::before  { content: '1'; }
+.codev-studio-explain-pin-2::before  { content: '2'; }
+.codev-studio-explain-pin-3::before  { content: '3'; }
+.codev-studio-explain-pin-4::before  { content: '4'; }
+.codev-studio-explain-pin-5::before  { content: '5'; }
+.codev-studio-explain-pin-6::before  { content: '6'; }
+.codev-studio-explain-pin-7::before  { content: '7'; }
+.codev-studio-explain-pin-8::before  { content: '8'; }
+.codev-studio-explain-pin-9::before  { content: '9'; }
+.codev-studio-explain-pin-10::before { content: '10'; }
+.codev-studio-explain-pin-11::before { content: '11'; }
+.codev-studio-explain-pin-12::before { content: '12'; }
+.codev-studio-explain-pin-13::before { content: '13'; }
+.codev-studio-explain-pin-14::before { content: '14'; }
+.codev-studio-explain-pin-15::before { content: '15'; }
+.codev-studio-explain-pin-16::before { content: '16'; }
+.codev-studio-explain-pin-17::before { content: '17'; }
+.codev-studio-explain-pin-18::before { content: '18'; }
+.codev-studio-explain-pin-19::before { content: '19'; }
+.codev-studio-explain-pin-20::before { content: '20'; }
+.codev-studio-explain-pin-21::before { content: '21'; }
+.codev-studio-explain-pin-22::before { content: '22'; }
+.codev-studio-explain-pin-23::before { content: '23'; }
+.codev-studio-explain-pin-24::before { content: '24'; }
+.codev-studio-explain-pin-25::before { content: '25'; }
+.codev-studio-explain-pin-26::before { content: '26'; }
+.codev-studio-explain-pin-27::before { content: '27'; }
+.codev-studio-explain-pin-28::before { content: '28'; }
+.codev-studio-explain-pin-29::before { content: '29'; }
+.codev-studio-explain-pin-30::before { content: '30'; }
 
 /* Line highlight while the tour is speaking that line. */
-.vbcdr-explain-line-tour {
+.codev-studio-explain-line-tour {
   background: linear-gradient(90deg, rgba(253, 224, 71, 0.18) 0%, rgba(253, 224, 71, 0.04) 60%, transparent 100%);
-  animation: vbcdr-line-tour 1.6s ease-out infinite;
+  animation: codev-studio-line-tour 1.6s ease-out infinite;
 }
 
-@keyframes vbcdr-line-tour {
+@keyframes codev-studio-line-tour {
   0%   { background-color: rgba(253, 224, 71, 0.10); }
   50%  { background-color: rgba(253, 224, 71, 0.22); }
   100% { background-color: rgba(253, 224, 71, 0.10); }
 }
 
-@keyframes vbcdr-thumb-fade {
+@keyframes codev-studio-thumb-fade {
   0%   { opacity: 0; transform: scale(0.92); }
   100% { opacity: 1; transform: scale(1); }
 }

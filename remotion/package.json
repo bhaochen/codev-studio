@@ -1,11 +1,11 @@
 {
-  "name": "vbcdr-video",
+  "name": "codev-studio-video",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts VbcdrDemo out/vbcdr-demo.mp4",
-    "render:4k": "remotion render src/index.ts VbcdrDemo out/vbcdr-demo-4k.mp4 --scale=2"
+    "render": "remotion render src/index.ts CodevStudioDemo out/codev-studio-demo.mp4",
+    "render:4k": "remotion render src/index.ts CodevStudioDemo out/codev-studio-demo-4k.mp4 --scale=2"
   },
   "dependencies": {
     "@remotion/cli": "4.0.421",
