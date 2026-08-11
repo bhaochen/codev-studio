@@ -20,11 +20,13 @@ import { MonacoErrorBoundary } from '@/components/editor/MonacoErrorBoundary'
 import { BinaryPreview } from '@/components/editor/BinaryPreview'
 import { GIT_STATUS_COLORS, GIT_STATUS_LABELS } from '@/config/git-status-style'
 import { useGitStore } from '@/stores/git-store'
-import { X, Circle } from 'lucide-react'
+import { X, Circle, Eye, Code2 } from 'lucide-react'
 import type { OpenFile, GitFileStatus } from '@/models/types'
 import type { editor } from 'monaco-editor'
 import { detectLanguage } from '@/lib/language-detect'
 import { useDiffEditorModels } from '@/hooks/useDiffEditorModels'
+import { MarkdownPreview, isMarkdownFile } from '@/components/editor/MarkdownPreview'
+import { usePreviewModeStore } from '@/stores/preview-mode-store'
 
 function handleBeforeMount(monaco: Monaco): void {
   registerMonacoThemes(monaco)
@@ -102,8 +104,11 @@ export function CodeEditor({ projectId }: { projectId: string }): React.ReactEle
   const [showSaved, setShowSaved] = useState(false)
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const previewEnabled = usePreviewModeStore((s) => s.previewEnabled[projectId] ?? false)
+  const setPreviewEnabled = usePreviewModeStore((s) => s.setPreviewEnabled)
 
   const activeFile = openFiles.find((f) => f.path === activeFilePath)
+  const activeIsMarkdown = activeFile !== undefined && isMarkdownFile(activeFile.name)
   const themeId = getFullThemeId()
   const monacoTheme = MONACO_THEME_NAME[themeId] ?? 'github-dark'
 
@@ -262,11 +267,23 @@ export function CodeEditor({ projectId }: { projectId: string }): React.ReactEle
         >
           Saved
         </span>
+        {activeIsMarkdown && (
+          <button
+            className="ml-auto mr-2 flex shrink-0 items-center gap-1 rounded px-2 py-1 text-micro text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+            title={previewEnabled ? 'Edit Markdown' : 'Preview Markdown'}
+            onClick={() => setPreviewEnabled(projectId, !previewEnabled)}
+          >
+            {previewEnabled ? <Code2 size={14} /> : <Eye size={14} />}
+            <span>{previewEnabled ? 'Edit' : 'Preview'}</span>
+          </button>
+        )}
       </div>
 
       <div className="relative flex-1">
         {activeFile ? (
-          activeFile.isBinary ? (
+          activeIsMarkdown && previewEnabled ? (
+            <MarkdownPreview content={activeFile.content} filePath={activeFile.path} />
+          ) : activeFile.isBinary ? (
             <BinaryPreview file={activeFile} />
           ) : typeof activeFile.originalContent === 'string' ? (
             <MonacoErrorBoundary onRecover={() => { editorRef.current = null }}>

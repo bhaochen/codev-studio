@@ -101,6 +101,7 @@
     "electron-store": "^8.2.0",
     "electron-updater": "^6.7.3",
     "ignore": "^7.0.3",
+    "marked": "^14.0.0",
     "mammoth": "^1.12.0",
     "node-pty": "^1.0.0",
     "react": "^18.3.1",
