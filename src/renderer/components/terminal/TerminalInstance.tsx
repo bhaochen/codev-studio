@@ -178,14 +178,19 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
         }
         // Ctrl+Shift+C: copy xterm selection to system clipboard
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c') && e.type === 'keydown') {
+          e.preventDefault()
           const selection = terminal.getSelection()
           if (selection) {
             void window.api.clipboard.writeText(selection)
           }
           return false
         }
-        // Ctrl+Shift+V: paste from system clipboard into the terminal
+        // Ctrl+Shift+V: paste from system clipboard into the terminal.
+        // preventDefault stops the browser from also dispatching a native
+        // paste event into xterm's textarea, which would otherwise cause
+        // the same text to be written to the PTY twice.
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'V' || e.key === 'v') && e.type === 'keydown') {
+          e.preventDefault()
           void window.api.clipboard.readText().then((text) => {
             if (text) terminal.paste(text)
           })
@@ -345,6 +350,14 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
 
         const textarea = terminal.textarea
         if (textarea) {
+          // Clear the textarea after every IME composition so the browser's
+          // follow-up input event sees an empty value and xterm does not
+          // re-emit the composed text into onData a second time.
+          textarea.addEventListener('compositionend', () => {
+            window.requestAnimationFrame(() => {
+              if (textarea.value !== '') textarea.value = ''
+            })
+          })
           const onFocus = (): void => {
             useTerminalStore.getState().setFocusedTabId(tabId)
           }
