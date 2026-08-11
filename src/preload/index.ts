@@ -125,7 +125,9 @@ const api = {
       return (): void => {
         ipcRenderer.removeListener('clipboard:image', handler)
       }
-    }
+    },
+    writeText: (text: string) => ipcRenderer.invoke('clipboard:write-text', text) as Promise<void>,
+    readText: () => ipcRenderer.invoke('clipboard:read-text') as Promise<string>
   },
 
   git: {

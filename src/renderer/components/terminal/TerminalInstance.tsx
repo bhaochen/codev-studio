@@ -176,6 +176,21 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
           }
           return false
         }
+        // Ctrl+Shift+C: copy xterm selection to system clipboard
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c') && e.type === 'keydown') {
+          const selection = terminal.getSelection()
+          if (selection) {
+            void window.api.clipboard.writeText(selection)
+          }
+          return false
+        }
+        // Ctrl+Shift+V: paste from system clipboard into the terminal
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'V' || e.key === 'v') && e.type === 'keydown') {
+          void window.api.clipboard.readText().then((text) => {
+            if (text) terminal.paste(text)
+          })
+          return false
+        }
         return true
       })
 
@@ -417,7 +432,7 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
       e.stopPropagation()
       dragCounter.current++
       const types = e.dataTransfer?.types
-      if (types?.includes('Files') || types?.includes('application/x-vbcdr-file')) {
+      if (types?.includes('Files') || types?.includes('application/x-codev-studio-file')) {
         setIsDragOver(true)
       }
     }
@@ -435,7 +450,7 @@ export function TerminalInstance({ tabId, projectId, cwd, initialCommand }: Term
       dragCounter.current = 0
       setIsDragOver(false)
 
-      const internalPath = e.dataTransfer?.getData('application/x-vbcdr-file')
+      const internalPath = e.dataTransfer?.getData('application/x-codev-studio-file')
       if (internalPath) {
         const rel = relativeToCwd(internalPath, cwd)
         terminalsMap.get(tabId)?.terminal.paste(`@${rel} `)
