@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { isMarkdownFile, MarkdownPreview } from './MarkdownPreview'
 
 const MD_PATH = '/home/user/proj/docs/README.md'
@@ -28,6 +28,7 @@ describe('MarkdownPreview', () => {
   })
 
   afterEach(() => {
+    cleanup()
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
   })
@@ -86,6 +87,26 @@ describe('MarkdownPreview', () => {
     // External images are left untouched
     const web = screen.getByAltText('web')
     expect(web.getAttribute('src')).toBe('https://example.com/remote.png')
+  })
+
+  it('renders inline and display LaTeX math with KaTeX', async () => {
+    render(
+      <MarkdownPreview
+        content={'Inline $x^2 + y^2$ here.\n\n$$\n\\int_0^1 f(x)\\,dx\n$$'}
+        filePath={MD_PATH}
+      />
+    )
+    await waitFor(() => {
+      expect(document.querySelector('.katex')).toBeTruthy()
+      expect(document.querySelector('.katex-display')).toBeTruthy()
+    })
+  })
+
+  it('leaves math inside code blocks untouched', async () => {
+    render(<MarkdownPreview content={'```js\nconst s = "$x^2$"\n```'} filePath={MD_PATH} />)
+    await new Promise((r) => setTimeout(r, 50))
+    expect(document.querySelector('.katex')).toBeNull()
+    expect(screen.getByText('const s = "$x^2$"')).toBeTruthy()
   })
 
   it('follows the dark theme variant for the container background', () => {

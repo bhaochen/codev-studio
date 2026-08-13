@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Marked } from 'marked'
 import { FileWarning } from 'lucide-react'
+import renderMathInElement from 'katex/contrib/auto-render'
 import { useThemeStore } from '@/stores/theme-store'
+import 'katex/dist/katex.min.css'
 
 interface MarkdownPreviewProps {
   content: string
@@ -106,6 +108,15 @@ export function MarkdownPreview({ content, filePath }: MarkdownPreviewProps): Re
     let cancelled = false
     const container = document.createElement('div')
     container.innerHTML = html
+    renderMathInElement(container, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true },
+      ],
+      throwOnError: false,
+    })
     const images = Array.from(container.querySelectorAll('img'))
     void Promise.all(
       images.map(async (img) => {
