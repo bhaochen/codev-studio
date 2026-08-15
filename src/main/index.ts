@@ -19,7 +19,7 @@ import { compactActivity, flushActivity } from '@main/services/activity-service'
 import { compactTokenUsage, flushTokenUsage } from '@main/services/token-usage-service'
 import { stopWatching } from '@main/services/file-watcher'
 import { registerUpdaterHandlers } from '@main/ipc/updater'
-import { registerUiHandlers, applyMenuBarVisibility } from '@main/ipc/ui'
+import { registerUiHandlers, hideNativeMenuBar } from '@main/ipc/ui'
 import { initAutoUpdater, checkForUpdates, checkForUpdatesInteractive } from '@main/services/auto-updater'
 import { startClipboardWatcher, stopClipboardWatcher } from '@main/services/clipboard-watcher'
 import { stopAutoFetch } from '@main/services/git-fetch-service'
@@ -175,7 +175,7 @@ function createWindow(): void {
   })
 
   startClipboardWatcher(win)
-  applyMenuBarVisibility(windows)
+  hideNativeMenuBar(windows)
 }
 
 registerProjectHandlers()

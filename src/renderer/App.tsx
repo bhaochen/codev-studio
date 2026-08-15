@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { AppLayoutGrid } from '@/components/layout/AppLayoutGrid'
 import { MonacoAnchor } from '@/components/editor/MonacoAnchor'
+import { MenuBar } from '@/components/layout/MenuBar'
 import { UpdateBanner } from '@/components/layout/UpdateBanner'
 
 import { ConflictBanner } from '@/components/git/ConflictBanner'
@@ -283,6 +284,7 @@ export function App(): React.ReactElement {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <MonacoAnchor />
+      <MenuBar />
       <UpdateBanner />
       <ConflictBanner />
       <AppLayoutGrid />

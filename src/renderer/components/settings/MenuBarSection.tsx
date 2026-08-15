@@ -14,6 +14,8 @@ export function MenuBarSection(): React.ReactElement {
     // Apply optimistically; revert if the main process rejects.
     setEnabled(next)
     window.api.settings.setMenuBarVisible(next).catch(() => setEnabled(!next))
+    // Let the MenuBar component pick up the new visibility immediately.
+    window.dispatchEvent(new CustomEvent('menu-bar-visible-changed'))
   }
 
   return (
