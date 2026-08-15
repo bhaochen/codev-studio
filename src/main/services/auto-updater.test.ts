@@ -91,11 +91,11 @@ describe('auto-updater', () => {
       expect(mod.getUpdateStatus()).toEqual({ state: 'downloaded', version: '2.0.0' })
     })
 
-    it('swallows 404 errors silently', () => {
+    it('treats a 404 from the update feed as not-available', () => {
       mod.initAutoUpdater()
       send.mockClear()
       autoUpdater.emit('error', new Error('Cannot find latest.yml: 404 Not Found'))
-      expect(send).not.toHaveBeenCalled()
+      expect(send).toHaveBeenLastCalledWith('updater:status', { state: 'not-available' })
     })
 
     it('broadcasts non-404 errors with their message', () => {

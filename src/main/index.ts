@@ -49,7 +49,33 @@ app.setAboutPanelOptions({
   iconPath: path.join(__dirname, '../../resources/icon.png')
 })
 
-let mainWindow: BrowserWindow | null = null
+// All open windows. The app uses a single-instance lock (see below) but can
+// host several windows, opened via the "New Window" desktop action which
+// passes --new-window on the command line.
+const windows = new Set<BrowserWindow>()
+
+// Single-instance lock (VS Code style): a second launch forwards its argv to
+// the running instance instead of starting another process. --new-window from
+// the desktop action asks the running instance to open an extra window.
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+}
+
+app.on('second-instance', (_event, argv) => {
+  if (argv.includes('--new-window')) {
+    createWindow()
+    return
+  }
+  // Plain launch (desktop icon, file manager): focus an existing window.
+  const first = [...windows][0]
+  if (first) {
+    if (first.isMinimized()) first.restore()
+    first.focus()
+  } else {
+    createWindow()
+  }
+})
 
 process.on('uncaughtException', (err) => {
   console.error('[main] uncaughtException:', err)
@@ -62,8 +88,9 @@ process.on('unhandledRejection', (reason) => {
 app.on('render-process-gone', (_event, webContents, details) => {
   console.error('[main] render-process-gone:', details.reason, details.exitCode)
   if (details.reason === 'crashed' || details.reason === 'oom') {
-    if (mainWindow && !mainWindow.isDestroyed() && webContents === mainWindow.webContents) {
-      const choice = dialog.showMessageBoxSync(mainWindow, {
+    const win = [...windows].find((w) => !w.isDestroyed() && w.webContents === webContents)
+    if (win) {
+      const choice = dialog.showMessageBoxSync(win, {
         type: 'error',
         title: 'Codev Studio',
         message: 'The window crashed.',
@@ -72,7 +99,7 @@ app.on('render-process-gone', (_event, webContents, details) => {
         defaultId: 0,
         cancelId: 1
       })
-      if (choice === 0) mainWindow.reload()
+      if (choice === 0) win.reload()
       else app.quit()
     }
   }
@@ -83,8 +110,12 @@ app.on('child-process-gone', (_event, details) => {
 })
 
 function activeWebContents(): Electron.WebContents | null {
-  if (!mainWindow || mainWindow.isDestroyed()) return null
-  return mainWindow.webContents
+  for (const win of windows) {
+    if (!win.isDestroyed() && win.isFocused()) return win.webContents
+  }
+  const last = [...windows].at(-1)
+  if (last && !last.isDestroyed()) return last.webContents
+  return null
 }
 
 function handleBeforeInput(_event: Electron.Event, input: Electron.Input): void {
@@ -99,7 +130,7 @@ function handleBeforeInput(_event: Electron.Event, input: Electron.Input): void 
 }
 
 function createWindow(): void {
-  mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 800,
@@ -112,15 +143,16 @@ function createWindow(): void {
       sandbox: false
     }
   })
+  windows.add(win)
 
-  mainWindow.webContents.on('before-input-event', handleBeforeInput)
+  win.webContents.on('before-input-event', handleBeforeInput)
 
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+  win.webContents.setWindowOpenHandler(({ url }) => {
     if (/^https?:\/\//.test(url)) shell.openExternal(url)
     return { action: 'deny' }
   })
 
-  mainWindow.webContents.on('will-navigate', (event, url) => {
+  win.webContents.on('will-navigate', (event, url) => {
     const appOrigin = process.env.ELECTRON_RENDERER_URL ?? 'file://'
     if (url.startsWith(appOrigin)) return
     event.preventDefault()
@@ -128,16 +160,16 @@ function createWindow(): void {
   })
 
   if (process.env.ELECTRON_RENDERER_URL) {
-    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+    win.loadURL(process.env.ELECTRON_RENDERER_URL)
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
+    win.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  win.on('closed', () => {
+    windows.delete(win)
   })
 
-  startClipboardWatcher(mainWindow)
+  startClipboardWatcher(win)
 }
 
 registerProjectHandlers()
@@ -183,9 +215,8 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
   }
 
   const send = (action: string): void => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('menu:action', action)
-    }
+    const wc = activeWebContents()
+    if (wc && !wc.isDestroyed()) wc.send('menu:action', action)
   }
 
   const fileMenu: Electron.MenuItemConstructorOptions = {
@@ -391,6 +422,7 @@ function buildMenu(): Electron.MenuItemConstructorOptions[] {
 }
 
 app.whenReady().then(() => {
+  if (!gotTheLock) return
   killOrphanedPtys()
   compactActivity()
   compactTokenUsage()

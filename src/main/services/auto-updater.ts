@@ -44,7 +44,13 @@ export function initAutoUpdater(): void {
   })
 
   autoUpdater.on('error', (err: Error) => {
-    if (err.message?.includes('404')) return
+    if (err.message?.includes('404')) {
+      // Update feed returned 404 — no release published yet, so there is
+      // nothing to update to. Report that instead of leaving the UI stuck on
+      // "checking".
+      broadcast({ state: 'not-available' })
+      return
+    }
     broadcast({ state: 'error', error: err.message })
   })
 }

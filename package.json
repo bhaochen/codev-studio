@@ -24,7 +24,7 @@
     "productName": "Codev Studio",
     "publish": {
       "provider": "github",
-      "owner": "jestersimpps",
+      "owner": "bhaochen",
       "repo": "codev-studio"
     },
     "directories": {
