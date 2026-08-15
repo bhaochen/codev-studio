@@ -206,6 +206,12 @@ const api = {
     }
   },
 
+  settings: {
+    menuBarVisible: () => ipcRenderer.invoke('ui:menu-bar-visible') as Promise<boolean>,
+    setMenuBarVisible: (visible: boolean) =>
+      ipcRenderer.invoke('ui:set-menu-bar-visible', visible) as Promise<boolean>
+  },
+
   activity: {
     record: (projectId: string, kind: 'i' | 'o') =>
       ipcRenderer.invoke('activity:record', projectId, kind),

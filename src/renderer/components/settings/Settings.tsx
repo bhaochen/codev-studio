@@ -5,6 +5,7 @@ import { LlmStartupCommandSection } from '@/components/settings/LlmStartupComman
 import { GlobalTerminalFolderSection } from '@/components/settings/GlobalTerminalFolderSection'
 import { TokenCapSection } from '@/components/settings/TokenCapSection'
 import { SoundSection } from '@/components/settings/SoundSection'
+import { MenuBarSection } from '@/components/settings/MenuBarSection'
 import { EditorSection } from '@/components/settings/EditorSection'
 import { ThemeSection } from '@/components/settings/ThemeSection'
 import { Section, useAccent } from '@/components/settings/SettingsControls'
@@ -78,6 +79,9 @@ export function Settings(): React.ReactElement {
             </Section>
             <Section title="Notifications">
               <SoundSection />
+            </Section>
+            <Section title="Interface">
+              <MenuBarSection />
             </Section>
           </>
         )}

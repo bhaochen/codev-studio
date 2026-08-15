@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, session, shell, systemPreferences, dialog } from 'electron'
+import { app, BrowserWindow, Menu, session, shell, systemPreferences, dialog, nativeTheme } from 'electron'
 import path from 'path'
 import { registerProjectHandlers } from '@main/ipc/projects'
 import { registerFilesystemHandlers } from '@main/ipc/filesystem'
@@ -19,12 +19,17 @@ import { compactActivity, flushActivity } from '@main/services/activity-service'
 import { compactTokenUsage, flushTokenUsage } from '@main/services/token-usage-service'
 import { stopWatching } from '@main/services/file-watcher'
 import { registerUpdaterHandlers } from '@main/ipc/updater'
+import { registerUiHandlers, applyMenuBarVisibility } from '@main/ipc/ui'
 import { initAutoUpdater, checkForUpdates, checkForUpdatesInteractive } from '@main/services/auto-updater'
 import { startClipboardWatcher, stopClipboardWatcher } from '@main/services/clipboard-watcher'
 import { stopAutoFetch } from '@main/services/git-fetch-service'
 import { stopAllRefsWatchers } from '@main/services/git-refs-watcher'
 
 app.setName('Codev Studio')
+
+// Force native UI (menu bar, context menus) to use the dark theme so it
+// matches the app's dark zinc theme instead of whatever the desktop defaults to.
+nativeTheme.themeSource = 'dark'
 
 // Enable Linux IME (fcitx5/IBus) on Wayland for the in-app terminal. These
 // must be set before any BrowserWindow is created. The dev script also
@@ -170,6 +175,7 @@ function createWindow(): void {
   })
 
   startClipboardWatcher(win)
+  applyMenuBarVisibility(windows)
 }
 
 registerProjectHandlers()
@@ -187,6 +193,7 @@ registerActivityHandlers()
 registerTokenUsageHandlers()
 registerDevServerHandlers()
 registerTsProjectHandlers()
+registerUiHandlers(() => windows)
 
 function buildMenu(): Electron.MenuItemConstructorOptions[] {
   const isMac = process.platform === 'darwin'

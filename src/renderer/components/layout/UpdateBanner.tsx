@@ -21,7 +21,7 @@ export function UpdateBanner(): React.ReactElement | null {
 
   if (state === 'checking') {
     return (
-      <div className="flex h-7 items-center justify-center gap-2 bg-zinc-700 text-xs text-white">
+      <div className="flex h-7 items-center justify-center gap-2 bg-zinc-800 text-xs text-zinc-200">
         <span>Checking for updates...</span>
       </div>
     )
@@ -29,7 +29,7 @@ export function UpdateBanner(): React.ReactElement | null {
 
   if (state === 'not-available') {
     return (
-      <div className="flex h-7 items-center justify-center gap-2 bg-zinc-700 text-xs text-white">
+      <div className="flex h-7 items-center justify-center gap-2 bg-zinc-800 text-xs text-zinc-200">
         <span>You're on the latest version</span>
       </div>
     )
