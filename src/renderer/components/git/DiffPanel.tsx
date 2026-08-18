@@ -258,11 +258,8 @@ export function DiffPanel({ projectId, cwd }: DiffPanelProps): React.ReactElemen
 
   const workingFiles = useMemo<ChangedFile[]>(() => {
     if (!statusMap) return []
-    const allPaths = Object.keys(statusMap).filter((p) => p !== cwd)
-    const leafPaths = allPaths.filter(
-      (p) => !allPaths.some((other) => other !== p && other.startsWith(p + '/'))
-    )
-    return leafPaths
+    const paths = Object.keys(statusMap).filter((p) => p !== cwd)
+    return paths
       .map((absolutePath) => ({
         absolutePath,
         name: basename(absolutePath),
