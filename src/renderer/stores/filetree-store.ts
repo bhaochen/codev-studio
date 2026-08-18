@@ -29,7 +29,8 @@ export const useFileTreeStore = create<FileTreeStore>((set, get) => ({
     const tree = await window.api.fs.readTree(rootPath, show)
     set((state) => ({
       treePerProject: { ...state.treePerProject, [projectId]: tree },
-      cwdPerProject: { ...state.cwdPerProject, [projectId]: rootPath }
+      cwdPerProject: { ...state.cwdPerProject, [projectId]: rootPath },
+      showIgnoredPerProject: { ...state.showIgnoredPerProject, [projectId]: show }
     }))
   },
 

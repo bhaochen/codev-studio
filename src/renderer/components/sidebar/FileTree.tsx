@@ -361,7 +361,7 @@ export function FileTree({
   useEffect(() => {
     if (!rootPath) return
     if (!tree) {
-      loadTree(treeKey, rootPath, showIgnored)
+      loadTree(treeKey, rootPath, true)
     }
   }, [treeKey])
 
